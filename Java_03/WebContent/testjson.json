@@ -1,0 +1,12 @@
+{
+    "error" : [
+                {
+                    "errorCode" : "100",
+                    "errorMessage" : "エラーメッセージその1"
+                },
+                {
+                    "errorCode" : "200",
+                    "errorMessage" : "エラーメッセージその2"
+                }
+              ]
+}

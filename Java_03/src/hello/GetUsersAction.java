@@ -59,7 +59,7 @@ public class GetUsersAction extends AbstractAction {
 
         String msg = "";
         User user;
-        int count =0;
+        int user_num =0;
         String user_id;;
         String user_pass;
         String user_disp;
@@ -72,39 +72,30 @@ public class GetUsersAction extends AbstractAction {
         }catch (Exception e){
         	System.out.printf("ドライバのロードに失敗しました2");
         }
-    	errmsg = "AAAAAAAAAA";
     	Connection conn = null;
     	String url = "jdbc:mysql://localhost/kdk";
     	String username = "root";
-    	String password = "pb1313zero";
-    	errmsg = "B2";
+    	String password = "root";
     	try{
     	  conn = DriverManager.getConnection(url, username, password);
     	  Statement stmt = (Statement) conn.createStatement();
-    	  //更新
-    	  String sql = "update m_user set v_user_pass='aaa' where v_user_id = 'a'";
-    	  //追加
-    	  //sql = "insert into m_user (v_user_id, v_user_pass) values ('b', 'bbb')";
-    	  //削除
-    	  //sql = "delete from m_user where v_user_id = 'b'";
-          int num = stmt.executeUpdate(sql);
+    	  String sql = "";
     	  sql = "SELECT * FROM m_user";
     	  ResultSet rs = stmt.executeQuery(sql);
+
     	  while(rs.next())
     	  {
     		user = new User();
 		  	user_id = rs.getString("v_user_id");
 		  	user_pass = rs.getString("v_user_pass");
-		  	user_disp = rs.getString("v_name_ki");
-		    user.setId(count);
+		  	user_disp = rs.getString("v_user_kanjiName");
+		  	user_num = rs.getInt("v_user_no");
+		    user.setId(user_num);
 	    	user.setUserId(user_id);
 	    	user.setUserPass(user_pass);
 	    	user.setDisplayName(user_disp);
-	    	System.out.printf(user_id);
 	    	users.add(user);
-	    	count++;
     	  }
-    	  errmsg = "BBBBBBBBBBBBBBB";
     	  // データベースに対する処理
 
     	}catch (SQLException e){
@@ -115,13 +106,10 @@ public class GetUsersAction extends AbstractAction {
     	    if (conn != null){
     	    	//データーベース終了
     	      conn.close();
-    	      System.out.printf("setuzokuOK");
-    	      errmsg = "ログイン失敗しました";
     	    }
     	  }catch (SQLException e){
     	    // 例外処理
-    		  System.out.printf("setuzokuNO2");
-    		  errmsg = "DDDDDDDDDDDDDD";
+
     	  }
     	}
 

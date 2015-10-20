@@ -46,15 +46,14 @@ public class LoginAction extends AbstractAction {
           Class.forName("com.mysql.jdbc.Driver").newInstance();
           System.out.printf("ドライバのロードに成功しましたLA");
         }catch (ClassNotFoundException e){
-        	System.out.printf("ドライバのロードに失敗しました1");
+
         }catch (Exception e){
-        	System.out.printf("ドライバのロードに失敗しました2");
         }
-    	errmsg = "AAAAAAAAAA";
+
     	Connection conn = null;
     	String url = "jdbc:mysql://localhost/kdk";
     	String username = "root";
-    	String password = "pb1313zero";
+    	String password = "root";
     	errmsg = "B2";
     	try{
     	  conn = DriverManager.getConnection(url, username, password);
@@ -68,14 +67,11 @@ public class LoginAction extends AbstractAction {
     		user = new User();
 		  	user_id = rs.getString("v_user_id");
 		  	user_pass = rs.getString("v_user_pass");
-		  	user_disp = rs.getString("v_name_ki");
-		    user.setId(count);
+		  	user_disp = rs.getString("v_user_kanjiName");
 	    	user.setUserId(user_id);
 	    	user.setUserPass(user_pass);
 	    	user.setDisplayName(user_disp);
-
 	    	users.add(user);
-	    	count++;
     	  }
     	  errmsg = "BBBBBBBBBBBBBBB";
     	  // データベースに対する処理
@@ -88,13 +84,11 @@ public class LoginAction extends AbstractAction {
     	    if (conn != null){
     	    	//データーベース終了
     	      conn.close();
-    	      System.out.printf("setuzokuOK");
+
     	      errmsg = "ログイン";
     	    }
     	  }catch (SQLException e){
     	    // 例外処理
-    		  System.out.printf("setuzokuNO2");
-    		  errmsg = "DDDDDDDDDDDDDD";
     	  }
     	}
 
@@ -107,9 +101,6 @@ public class LoginAction extends AbstractAction {
     			this.errmsg = "ログイン成功しました";
     			return SUCCESS;
     		}
-
-
-
 
     	}
     	this.errmsg = "ログイン失敗しました!!";

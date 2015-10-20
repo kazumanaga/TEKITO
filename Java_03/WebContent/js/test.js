@@ -52,6 +52,14 @@ $(document).ready( function() {
 		});
 
 });
+function OverlapCheck(chId1,chPass1,chId2,chPass2)
+{
+	if(chId1 == chId2 && chPass1 == chPass2)
+	{
+		return true;
+	}
+	return false;
+}
 function jsonParser(data) {
     var message = "";
     var dataArray = data.error;
@@ -86,10 +94,10 @@ function addRow()
     // 現在の最大のID番号取得
     var arrrows = $("#list").getRowData();
     var max = 0;
-    console.log(max);
+
     for (i = 0; i < arrrows.length; i++)
     {
-        var cur = parseInt(arrrows[i].no);
+        var cur = parseInt(arrrows[i].id);
         if (max < cur)
         {
             max = cur;
@@ -103,29 +111,47 @@ function addRow()
     var str2=document.js.pass.value;
     var str3=document.js.display.value;
 
-    var data = {"testcode" : tmpData.no,
+    var data = {"UserNo" : tmpData.no,
 			"UserName" : str1,
 			"UserPass" : str2,
 			"DispName" : str3,
 		};
 
+    // rowId取得(#list)
+	var arrayData =[]; // 配列の初期化
+	var overFlag = false;
+
 	if(!str1=="" && !str2=="" && !str3=="")
 	{
-		 $.ajax({
-	         type: "POST",
-	         url: 'DataBase/DataBaseAdd',
-	         data:data,
-	         dataType: "json",
-	         async: false,
-	         success: function(){
-			//DataBase更新
-			DataBaseUpdata();
-			g_CurrentNum = $("#list").getGridParam("records");
-			//最大行番号数選択
 
+		for(var i = 0;i<arrrows.length;i++)
+		{
+			arrayData[i] = $('#list').jqGrid('getRowData', i+1);
+			if(OverlapCheck(arrayData[i].userId,arrayData[i].userPass,data.UserName,data.UserPass))
+			{
+				alert("同じID又は同じﾊﾟｽﾜｰﾄﾞがあります");
+				overFlag = true;
+				break;
+			}
+		}
 
-				}
-	     });
+		if(!overFlag)
+		{
+			 $.ajax({
+		         type: "POST",
+		         url: 'DataBase/DataBaseAdd',
+		         data:data,
+		         dataType: "json",
+		         async: false,
+		         success: function(){
+				g_CurrentNum = 0;
+				//最大行番号数選択
+				//DataBase更新
+				DataBaseUpdata();
+
+					}
+		     });
+		}
 
 	}
 	else
@@ -155,16 +181,20 @@ function addRow()
 
 function deleteRow()
 {
+    // 選択されている行番号を取得
+    var sel_id = $("#list").getGridParam("selrow");
+    var index = $("#list").jqGrid('getInd',sel_id); // counting from 1
 
     // 現在の選択されている行を取得
-	var CurrentIdList = g_CurrentNum = $("#list").getGridParam("selrow");
+	var CurrentIdList = $("#list").getGridParam("selrow");
     // rowId取得(#list)
     var rowIdList = $("#list").jqGrid('getDataIDs');
+    // 選択されている行のﾃﾞｰﾀ取得
     var listData = $('#list').jqGrid('getRowData', CurrentIdList);
-	var data = {"testcode" : listData.userId};
+	var data = {"UserNo" : listData.id};
 
-
-	if(window.confirm('削除しますか？')){
+	if(window.confirm('削除しますか？'))
+	{
 		g_SelectAction = true;
 
 	}
@@ -184,7 +214,7 @@ function deleteRow()
 	         success: function(){
 			//DataBase更新
 			DataBaseUpdata();
-
+			g_CurrentNum = index;
 
 
 				}
@@ -211,6 +241,7 @@ function updataRow()
     // rowId取得(#list)
     var rowIdList = $("#list").jqGrid('getDataIDs');
     var listData = $('#list').jqGrid('getRowData', CurrentIdList);
+    var lislis = $("#list").jqGrid('getInd');
 
 	// ID取得(キャレット変更用)
 	var element0 = document.getElementById("userId");
@@ -278,10 +309,16 @@ function SelectRow()
 	{
 		var rowMax = $("#list").getGridParam("records");
 		var rowIdList = $("#list").jqGrid('getDataIDs');
-		if(g_CurrentNum == rowMax)
+
+		if(g_CurrentNum == 0)
 		{
-			g_CurrentNum--;
+			g_CurrentNum = rowMax;
 		}
+		if(g_CurrentNum == rowMax+1)
+		{
+			g_CurrentNum = rowMax;
+		}
+		g_CurrentNum--;
 		$("#list").setSelection(rowIdList[g_CurrentNum],true);
 		g_CurrentNum = -1;
 	}
@@ -307,3 +344,4 @@ function SelectRowUpdata()
 
 
 }
+

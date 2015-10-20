@@ -24,22 +24,17 @@
 
             <s:submit value="ログイン"/>
             <h6 class="err"><s:property value="errmsg" /></h6>
-            <s:property value="flag" />
-
-
     </div>
 </s:form>
 
+
+<s:if test="errmsg == 'ログイン成功しました'">
+
+<div id="disp">
 <s:form action="LoginOut">
             <s:submit value="ログアウト"/>
             <h6><s:property value="logoutmsg" /></h6>
 </s:form>
-
-<s:if test="errmsg == 'ログイン成功しました'">
-
-
-<div id="disp">
-
 <div style="border:#aa66aa solid 1px;width:800px;position: relative;font-size: 18px;font-weight: 700;color: #aa66aa;">
 <span style="position:absolute; top:-10px; left:30px; background-color: #fff;">ユーザーマスター編集</span>
 </div>
@@ -69,15 +64,7 @@
 <table id="list"></table>
 
 <div style="color:#a5a5ff; font-size:20pt; font-weight:bold;">ログイン</div>
-<script>
-function addrow() {
-	var $userControls = $('#userControls');
 
-	$userControls.attr('action', 'add');
-
-	$userControls.submit();
-}
-</script>
 
 <table id = "jquery-tablehover" class="tablesorter">
  <thead>
@@ -127,4 +114,3 @@ function addrow() {
     </tr>
   </tbody>
 </table>
-<jsp:include page="footer.jsp"/>

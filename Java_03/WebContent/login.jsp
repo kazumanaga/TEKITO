@@ -9,6 +9,9 @@
 <link rel="stylesheet" type="text/css" href="css/jquery-ui.structure.min.css" />
 <link rel="stylesheet" type="text/css" href="css/ui.jqgrid.css" />
 
+<!-- カーソル -->
+<body onLoad="document.LoginCheck.userId.focus()">
+<!-- ログイン -->
 <s:form action="LoginCheck">
     <div>
         <div>
@@ -20,52 +23,63 @@
             パスワード:<s:textfield name="password" type="password" />
         </div>
     </div>
-    <div>
+            <s:if test="state == 'out'">
 
             <s:submit value="ログイン"/>
-            <h6 class="err"><s:property value="errmsg" /></h6>
-    </div>
+            <s:if test="pattern == 'err'">
+            <font size="3" color="red"><s:property value="errmsg" /></font>
+			</s:if>
+		    <s:if test="pattern == 'out'">
+            <font size="3" color="black"><s:property value="errmsg" /></font>
+			</s:if>
+
+			</s:if>
+
 </s:form>
-
-
-<s:if test="errmsg == 'ログイン成功しました'">
-
-<div id="disp">
-<s:form action="LoginOut">
+<!-- ユーザマスタ -->
+<s:if test="state == 'in'">
+	<div id="disp">
+			<s:form action="LoginOut">
             <s:submit value="ログアウト"/>
-            <h6><s:property value="logoutmsg" /></h6>
-</s:form>
-<div style="border:#aa66aa solid 1px;width:800px;position: relative;font-size: 18px;font-weight: 700;color: #aa66aa;">
-<span style="position:absolute; top:-10px; left:30px; background-color: #fff;">ユーザーマスター編集</span>
-</div>
+            <s:if test="pattern == 'ok'">
+            <font size="3" color="black"><s:property value="errmsg" /></font>
+			</s:if>
+			</s:form>
+	<br>
+	<div style="border:#aa66aa solid 1px;width:800px;position: relative;font-size: 18px;font-weight: 700;color: #aa66aa;">
+	<span style="position:absolute; top:-10px; left:30px; background-color: #fff;">ユーザーマスター編集</span>
+	</div>
 <br>
 
-<form name="js">
-<p>
- <input type='button' id='button3' onClick="addRow()" value='追加'>
-  <input type='button' id='button2' onClick="updataRow()"  value='更新'>
-   <input type='button' id='button0' onClick="deleteRow()" value='削除'>
-</p>
+	<form name="js">
+	<p>
+	<input type='button' id='button3' onClick="addRow()" value='追加'>
+	<input type='button' id='button2' onClick="updataRow()"  value='更新'>
+	<input type='button' id='button0' onClick="deleteRow()" value='削除'>
+	</p>
 
-<ul>
-<li style="display: inline;margin-right: 120px;top:10px;">ユーザ名</li>
-<li style="display: inline;margin-right: 120px;">パスワード</li>
-<li style="display: inline;">表示名</li>
-</ul>
-<p>
+	<ul>
+	<li style="display: inline;margin-right: 120px;top:10px;">ユーザ名</li>
+	<li style="display: inline;margin-right: 120px;">パスワード</li>
+	<li style="display: inline;">表示名</li>
+	</ul>
+	<p>
 	<input type="text" name="userid" id = "userId" />
 	<input type="text" name="pass" id = "userPassword" />
 	<input type="text" name="display" id = "userName" />
+	</p>
+	</form>
+	</div>
 
-</p>
-</form>
-</div>
 </s:if>
+
+<br>
+<!-- テーブル -->
 <table id="list"></table>
 
 <div style="color:#a5a5ff; font-size:20pt; font-weight:bold;">ログイン</div>
 
-
+</body>
 <table id = "jquery-tablehover" class="tablesorter">
  <thead>
     <tr>

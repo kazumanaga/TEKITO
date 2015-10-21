@@ -125,7 +125,7 @@ function addRow()
 	if(!str1=="" && !str2=="" && !str3=="")
 	{
 
-		for(var i = 0;i<arrrows.length;i++)
+		for(var i = 0;i<=arrrows.length;i++)
 		{
 			arrayData[i] = $('#list').jqGrid('getRowData', i+1);
 			if(OverlapCheck(arrayData[i].userId,arrayData[i].userPass,data.UserName,data.UserPass))
@@ -194,32 +194,27 @@ function deleteRow()
     var listData = $('#list').jqGrid('getRowData', CurrentIdList);
 	var data = {"UserNo" : listData.id};
 
-	if(window.confirm('削除しますか？'))
+	if(CurrentIdList)
 	{
-		g_SelectAction = true;
 
-	}
-	else
+		if(window.confirm('削除しますか？'))
 		{
-		 return;
+			$.ajax({
+		         type: "POST",
+		         url: 'DataBase/DataBaseDelete',
+		         data:data,
+		         dataType: "json",
+		         async: false,
+		         success: function(){
+				//DataBase更新
+				DataBaseUpdata();
+				g_CurrentNum = index;
+
+
+					}
+		     });
+
 		}
-
-	if(CurrentIdList&&g_SelectAction)
-	{
-		 $.ajax({
-	         type: "POST",
-	         url: 'DataBase/DataBaseDelete',
-	         data:data,
-	         dataType: "json",
-	         async: false,
-	         success: function(){
-			//DataBase更新
-			DataBaseUpdata();
-			g_CurrentNum = index;
-
-
-				}
-	     });
 
 	}
 	else
@@ -245,7 +240,9 @@ function updataRow()
     // rowId取得(#list)
     var rowIdList = $("#list").jqGrid('getDataIDs');
     var listData = $('#list').jqGrid('getRowData', CurrentIdList);
-    var lislis = $("#list").jqGrid('getInd');
+
+    // 現在の最大のID番号取得
+    var arrrows = $("#list").getRowData();
 
 	// ID取得(キャレット変更用)
 	var element0 = document.getElementById("userId");
@@ -258,8 +255,27 @@ function updataRow()
 			"DispName" : element2.value,
 		};
 
+    // rowId取得(#list)
+	var arrayData =[]; // 配列の初期化
+	var overFlag = false;
+
 	if(CurrentIdList)
 	{
+		for(var i = 0;i<=arrrows.length;i++)
+		{
+			if(i !=index-1)
+			{
+				arrayData[i] = $('#list').jqGrid('getRowData', i+1);
+				if(OverlapCheck(arrayData[i].userId,arrayData[i].userPass,data.UserName,data.UserPass))
+				{
+					alert("同じID又は同じﾊﾟｽﾜｰﾄﾞがあります");
+					overFlag = true;
+					break;
+				}
+			}
+		}
+		if(!overFlag)
+		{
 		 $.ajax({
 	         type: "POST",
 	         url: 'DataBase/DataBaseEdit',
@@ -272,12 +288,14 @@ function updataRow()
 			g_UpdataCurrentNum = index;
 				}
 	     });
+		}
 
 	}
 	else
 	{
 		alert("選択されてません");
 	}
+
 
 }
 function DataBaseUpdata()
@@ -351,6 +369,16 @@ function SelectRowUpdata()
 			element0.value = rowdata.userId;
 			element1.value = rowdata.userPass;
 			element2.value = rowdata.displayName;
+	 }
+	 else
+	 {
+		 if(element0 && element0 && element0)
+		{
+		 // 要素空
+			element0.value = '';
+			element1.value = '';
+			element2.value = '';
+		}
 	 }
 
 

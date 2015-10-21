@@ -10,7 +10,7 @@
 div.container{
     max-width:800px;
 }
-p.err{
+h6.err{
     color:red;
 }
 div.result dd{

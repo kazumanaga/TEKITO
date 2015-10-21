@@ -14,7 +14,9 @@ public class LoginAction extends AbstractAction {
 
     private static final long serialVersionUID = 1L;
 
+    public String state;
     public String errmsg;
+    public String pattern;
     public String userId;
     public String password;
 
@@ -25,6 +27,7 @@ public class LoginAction extends AbstractAction {
 	}
 
     public String execute() throws Exception {
+    	this.state = "out";
         this.sessionMap.put("userId", null);
         this.sessionMap.put("password", null);
         this.userId = "";
@@ -99,17 +102,23 @@ public class LoginAction extends AbstractAction {
     		if(this.userId.equals(user.getUserId()) && this.password.equals(user.getUserPass()))
     		{
     			this.errmsg = "ログイン成功しました";
+    			this.pattern = "ok";
+    			this.state = "in";
     			return SUCCESS;
     		}
 
     	}
     	this.errmsg = "ログイン失敗しました!!";
+    	this.pattern = "err";
+    	this.state = "out";
     	return ERROR;
     }
 
 	public String loginOut() throws Exception {
 
 		this.errmsg = "ログアウトしました";
+		this.pattern = "out";
+		this.state = "out";
 		return SUCCESS;
     }
 

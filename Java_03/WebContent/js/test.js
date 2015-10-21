@@ -1,5 +1,6 @@
 //グローバル
 var g_CurrentNum = -1;
+var g_UpdataCurrentNum = -1;
 var g_SelectAction = false;
 var g_tableNum = -1;
 // メソッド
@@ -236,8 +237,11 @@ function deleteRow()
 }
 function updataRow()
 {
+    // 選択されている行番号を取得
+    var sel_id = $("#list").getGridParam("selrow");
+    var index = $("#list").jqGrid('getInd',sel_id); // counting from 1
     // 現在の選択されている行を取得
-	var CurrentIdList = g_CurrentNum = $("#list").getGridParam("selrow");
+	var CurrentIdList = $("#list").getGridParam("selrow");
     // rowId取得(#list)
     var rowIdList = $("#list").jqGrid('getDataIDs');
     var listData = $('#list').jqGrid('getRowData', CurrentIdList);
@@ -248,7 +252,7 @@ function updataRow()
 	var element1 = document.getElementById("userPassword");
 	var element2 = document.getElementById("userName");
 
-	var data = {"testcode" : listData.userId,
+	var data = {"UserNo" : listData.id,
 			"UserName" : element0.value,
 			"UserPass" : element1.value,
 			"DispName" : element2.value,
@@ -265,6 +269,7 @@ function updataRow()
 	         success: function(){
 			//DataBase更新
 			DataBaseUpdata();
+			g_UpdataCurrentNum = index;
 				}
 	     });
 
@@ -305,11 +310,11 @@ function DataBaseUpdata()
 }
 function SelectRow()
 {
+	var rowMax = $("#list").getGridParam("records");
+	var rowIdList = $("#list").jqGrid('getDataIDs');
+
 	if(g_CurrentNum != -1)
 	{
-		var rowMax = $("#list").getGridParam("records");
-		var rowIdList = $("#list").jqGrid('getDataIDs');
-
 		if(g_CurrentNum == 0)
 		{
 			g_CurrentNum = rowMax;
@@ -321,6 +326,12 @@ function SelectRow()
 		g_CurrentNum--;
 		$("#list").setSelection(rowIdList[g_CurrentNum],true);
 		g_CurrentNum = -1;
+	}
+	if(g_UpdataCurrentNum != -1)
+	{
+		g_UpdataCurrentNum--;
+		$("#list").setSelection(rowIdList[g_UpdataCurrentNum],true);
+		g_UpdataCurrentNum = -1;
 	}
 }
 function SelectRowUpdata()

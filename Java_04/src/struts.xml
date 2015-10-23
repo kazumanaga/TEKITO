@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+<package name="HelloWorld" namespace="/" extends="struts-default" >
+
+	<action name="Login"  class="hello.LoginAction">
+		<result name="success">/login.jsp</result>
+		<result name="error">/login.jsp</result>
+	</action>
+
+	<action name="LoginCheck" method="loginCheck"  class="hello.LoginAction">
+	<result name="success">/login.jsp</result>
+	<result name="error">/login.jsp</result>
+	</action>
+	<action name="LoginOut" method="loginOut"  class="hello.LoginAction">
+	<result name="success">/login.jsp</result>
+	<result name="error">/login.jsp</result>
+	</action>
+
+	<action name="test" method="test" class="hello.LoginAction">
+		<result name="success">/login.jsp</result>
+		<result name="error">/login.jsp</result>
+		<result name="main">/login.jsp</result>
+	</action>
+
+</package>
+
+ <package name="ajax" namespace="/ajax" extends="json-default">
+	<action name="jsonSample" method="jsonSample" class="hello.GetUsersAction">
+		<result name="success" type="json">
+			<param name="root">users</param>
+		</result>
+	</action>
+	<action name="DBConection" method="DBConection" class="hello.GetUsersAction">
+	<result name="success" type="json">
+		<param name="root">users</param>
+	</result>
+	</action>
+
+</package>
+
+<package name="DataBase" namespace="/DataBase" extends="json-default" >
+
+	<action name="DataBaseAdd" method="DataBaseAdd" class="hello.DataBaseAction">
+		<result name="success" type="json">
+		</result>
+	</action>
+
+	<action name="DataBaseEdit" method="DataBaseEdit" class="hello.DataBaseAction">
+		<result name="success" type="json">
+		</result>
+	</action>
+
+	<action name="DataBaseDelete" method="DataBaseDelete" class="hello.DataBaseAction">
+		<result name="success" type="json">
+		</result>
+	</action>
+
+</package>
+
+</struts>

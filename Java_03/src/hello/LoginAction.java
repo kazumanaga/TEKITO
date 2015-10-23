@@ -27,7 +27,7 @@ public class LoginAction extends AbstractAction {
 	}
 
     public String execute() throws Exception {
-    	this.state = "out";
+    	//this.state = "out";
         this.sessionMap.put("userId", null);
         this.sessionMap.put("password", null);
         this.userId = "";
@@ -110,7 +110,7 @@ public class LoginAction extends AbstractAction {
     	}
     	this.errmsg = "ログイン失敗しました!!";
     	this.pattern = "err";
-    	this.state = "out";
+    	this.state = null;
     	return ERROR;
     }
 
@@ -118,7 +118,7 @@ public class LoginAction extends AbstractAction {
 
 		this.errmsg = "ログアウトしました";
 		this.pattern = "out";
-		this.state = "out";
+		this.state = null;
 		return SUCCESS;
     }
 

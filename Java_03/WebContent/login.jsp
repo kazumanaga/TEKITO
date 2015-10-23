@@ -23,7 +23,7 @@
             パスワード:<s:textfield name="password" type="password" />
         </div>
     </div>
-            <s:if test="state == 'out'">
+            <s:if test="state == null">
 
             <s:submit value="ログイン"/>
             <s:if test="pattern == 'err'">
@@ -34,6 +34,16 @@
 			</s:if>
 
 			</s:if>
+
+            <s:elseif test="state != in">
+            <s:submit value="値がおかしい"/>
+            <s:if test="pattern == 'err'">
+            <font size="3" color="red"><s:property value="errmsg" /></font>
+			</s:if>
+		    <s:if test="pattern == 'out'">
+            <font size="3" color="black"><s:property value="errmsg" /></font>
+			</s:if>
+			</s:elseif>
 
 </s:form>
 <!-- ユーザマスタ -->

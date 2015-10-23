@@ -102,6 +102,7 @@ function addRow()
         if (max < cur)
         {
             max = cur;
+            console.log(max);
         }
     }
     var tmpData = {
@@ -129,7 +130,7 @@ function addRow()
 			arrayData[i] = $('#list').jqGrid('getRowData', i+1);
 			if(OverlapCheck(arrayData[i].userId,arrayData[i].userPass,data.UserName,data.UserPass))
 			{
-				//alert("入力されたユーザー名とパスワードは\nすでに登録されているため\n追加登録できません");
+				alert("入力されたユーザー名とパスワードは\nすでに登録されているため\n追加登録できません");
 				overFlag = true;
 				break;
 			}

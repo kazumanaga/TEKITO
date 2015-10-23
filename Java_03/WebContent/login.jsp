@@ -13,6 +13,7 @@
 <body onLoad="document.LoginCheck.userId.focus()">
 <!-- ログイン -->
 <s:form action="LoginCheck">
+    <s:if test="state == null">
     <div>
         <div>
             ユーザー名:<s:textfield name="userId" />
@@ -23,6 +24,7 @@
             パスワード:<s:textfield name="password" type="password" />
         </div>
     </div>
+    </s:if>
             <s:if test="state == null">
 
             <s:submit value="ログイン"/>
@@ -44,7 +46,6 @@
             <font size="3" color="black"><s:property value="errmsg" /></font>
 			</s:if>
 			</s:elseif>
-
 </s:form>
 <!-- ユーザマスタ -->
 <s:if test="state == 'in'">

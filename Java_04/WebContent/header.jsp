@@ -4,7 +4,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Java_03</title>
-<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
 <link rel="stylesheet" href="css/tablesorter/themes/blue/style.css" type="text/css" />
 <style>
 div.container{
@@ -51,9 +50,7 @@ table.tablesorter tbody td {
 <script
   type='text/javascript'
   src="js/jquery-ui.min.js"></script>
-<script
-  type='text/javascript'
-  src="js/jquery-latest.js"></script>
+
 <script
   type='text/javascript'
   src="js/jquery.tablesorter.min.js"></script>

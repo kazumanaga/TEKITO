@@ -6,21 +6,8 @@ var g_tableNum = -1;
 // メソッド
 $(document).ready( function() {
 
-	$('#button1').click(function(){
-		  $.ajax({
-		    url: "testjson.json",
-		    type: "GET",
-		    dataType: "json",
-		    cache: false,
-		    success: function(data){
-		    	var message = jsonParser(data);
-		      $('#div1').html(message);
-		    },
-		    error: function(xhr, textStatus, errorThrown){
-		      alert('Error! ' + textStatus + ' ' + errorThrown);
-		    }
-		  });
-		});
+	$("#dialog").dialog();
+
 	//DataBase更新
 	$("#list").jqGrid({
 		    url: 'ajax/DBConection',
@@ -28,11 +15,12 @@ $(document).ready( function() {
 		   mtype: 'GET',
 		   colNames:['No', 'ユーザID', 'パスワード', '表示名'],
 		   colModel :[
-		     {name:'id', width:95},
+		     {name:'id', width:95,editable:true},
 		     {name:'userId', width:90},
 		     {name:'userPass', width:90},
 		     {name:'displayName', width:150},
 		   ],
+           cellEdit: false,                // false: セルの直接編集はしな
 		   rowNum:100,
 		   rowList:[10,20,30],
 		   sortname: 'no',
@@ -87,94 +75,94 @@ $(function()
 });
 function addRow()
 {
-	// ID取得(キャレット変更用)
-	var element0 = document.getElementById("userId");
-	var element1 = document.getElementById("userPassword");
-	var element2 = document.getElementById("userName");
-
-    // 現在の最大のID番号取得
-    var arrrows = $("#list").getRowData();
-    var max = 0;
-
-    for (i = 0; i < arrrows.length; i++)
-    {
-        var cur = parseInt(arrrows[i].id);
-        if (max < cur)
-        {
-            max = cur;
-            console.log(max);
-        }
-    }
-    var tmpData = {
-    		no: max + 1,
-    };
-    var str1=document.js.userid.value;
-    var str2=document.js.pass.value;
-    var str3=document.js.display.value;
-
-    var data = {"UserNo" : tmpData.no,
-			"UserName" : str1,
-			"UserPass" : str2,
-			"DispName" : str3,
-		};
-
-    // rowId取得(#list)
-	var arrayData =[]; // 配列の初期化
-	var overFlag = false;
-
-	if(!str1=="" && !str2=="" && !str3=="")
-	{
-
-		for(var i = 0;i<=arrrows.length;i++)
-		{
-			arrayData[i] = $('#list').jqGrid('getRowData', i+1);
-			if(OverlapCheck(arrayData[i].userId,arrayData[i].userPass,data.UserName,data.UserPass))
-			{
-				alert("同じID又は同じﾊﾟｽﾜｰﾄﾞがあります");
-				overFlag = true;
-				break;
-			}
-		}
-
-		if(!overFlag)
-		{
-			 $.ajax({
-		         type: "POST",
-		         url: 'DataBase/DataBaseAdd',
-		         data:data,
-		         dataType: "json",
-		         async: false,
-		         success: function(){
-				g_CurrentNum = 0;
-				//最大行番号数選択
-				//DataBase更新
-				DataBaseUpdata();
-
-					}
-		     });
-		}
-
-	}
-	else
-	{
-		alert("未記入項目があります");
-		if(str1=="")
-		{
-			element0.focus();
-			element0.setSelectionRange(0,0);
-		}
-		else if(str2=="")
-		{
-			element1.focus();
-			element1.setSelectionRange(0,0);
-		}
-		else if(str3=="")
-		{
-			element2.focus();
-			element2.setSelectionRange(0,0);
-		}
-
-	}
+//	// ID取得(キャレット変更用)
+//	var element0 = document.getElementById("userId");
+//	var element1 = document.getElementById("userPassword");
+//	var element2 = document.getElementById("userName");
+//
+//    // 現在の最大のID番号取得
+//    var arrrows = $("#list").getRowData();
+//    var max = 0;
+//
+//    for (i = 0; i < arrrows.length; i++)
+//    {
+//        var cur = parseInt(arrrows[i].id);
+//        if (max < cur)
+//        {
+//            max = cur;
+//            console.log(max);
+//        }
+//    }
+//    var tmpData = {
+//    		no: max + 1,
+//    };
+//    var str1=document.js.userid.value;
+//    var str2=document.js.pass.value;
+//    var str3=document.js.display.value;
+//
+//    var data = {"UserNo" : tmpData.no,
+//			"UserName" : str1,
+//			"UserPass" : str2,
+//			"DispName" : str3,
+//		};
+//
+//    // rowId取得(#list)
+//	var arrayData =[]; // 配列の初期化
+//	var overFlag = false;
+//
+//	if(!str1=="" && !str2=="" && !str3=="")
+//	{
+//
+//		for(var i = 0;i<=arrrows.length;i++)
+//		{
+//			arrayData[i] = $('#list').jqGrid('getRowData', i+1);
+//			if(OverlapCheck(arrayData[i].userId,arrayData[i].userPass,data.UserName,data.UserPass))
+//			{
+//				alert("同じID又は同じﾊﾟｽﾜｰﾄﾞがあります");
+//				overFlag = true;
+//				break;
+//			}
+//		}
+//
+//		if(!overFlag)
+//		{
+//			 $.ajax({
+//		         type: "POST",
+//		         url: 'DataBase/DataBaseAdd',
+//		         data:data,
+//		         dataType: "json",
+//		         async: false,
+//		         success: function(){
+//				g_CurrentNum = 0;
+//				//最大行番号数選択
+//				//DataBase更新
+//				DataBaseUpdata();
+//
+//					}
+//		     });
+//		}
+//
+//	}
+//	else
+//	{
+//		alert("未記入項目があります");
+//		if(str1=="")
+//		{
+//			element0.focus();
+//			element0.setSelectionRange(0,0);
+//		}
+//		else if(str2=="")
+//		{
+//			element1.focus();
+//			element1.setSelectionRange(0,0);
+//		}
+//		else if(str3=="")
+//		{
+//			element2.focus();
+//			element2.setSelectionRange(0,0);
+//		}
+//
+//	}
 
 
 

@@ -5,8 +5,7 @@
 
 <!-- カーソル -->
 <body onLoad="document.LoginCheck.userId.focus()">
-<p><span class="ui-icon ui-icon-trash"></span><span class="ui-icon ui-icon-gear"></span><span class="ui-icon ui-icon-home"></span></p>
-
+<span class="ui-icon ui-icon-arrowthick-2-se-nw"></span>a
 <!-- ログイン -->
 <s:form action="LoginCheck">
     <div>

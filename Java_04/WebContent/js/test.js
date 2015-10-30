@@ -6,7 +6,6 @@ var g_tableNum = -1;
 // メソッド
 $(document).ready( function() {
 
-	$("#dialog").dialog();
 
 	//DataBase更新
 	$("#list").jqGrid({
@@ -39,6 +38,28 @@ $(document).ready( function() {
 
 		SelectRowUpdata();
 		});
+
+	$( "#dialog" ).dialog({
+		autoOpen: false,
+		width: 640,
+		height:320,
+		buttons: [
+			{
+				text: "Ok",
+				click: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			{
+				text: "Cancel",
+				click: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		]
+	});
+
+
 
 });
 function OverlapCheck(chId1,chPass1,chId2,chPass2)
@@ -75,6 +96,8 @@ $(function()
 });
 function addRow()
 {
+
+	$( "#dialog" ).dialog( "open" );
 //	// ID取得(キャレット変更用)
 //	var element0 = document.getElementById("userId");
 //	var element1 = document.getElementById("userPassword");

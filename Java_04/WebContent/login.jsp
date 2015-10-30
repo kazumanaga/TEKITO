@@ -1,12 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <jsp:include page="header.jsp"/>
-<script type="text/javascript" src="js/test.js">
-</script>
-<script src="js/jquery.jqGrid.min.js"></script>
-<link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css" />
-<link rel="stylesheet" type="text/css" href="css/jquery-ui.structure.min.css" />
-<link rel="stylesheet" type="text/css" href="css/ui.jqgrid.css" />
+
 
 <!-- カーソル -->
 <body onLoad="document.LoginCheck.userId.focus()">
@@ -89,54 +84,6 @@
 <div style="color:#a5a5ff; font-size:20pt; font-weight:bold;">ログイン</div>
 
 </body>
-<table id = "jquery-tablehover" class="tablesorter">
- <thead>
-    <tr>
-      <th>ユーザID</th>
-      <th>ユーザ名</th>
-      <th>パスワード</th>
-      <th>表示名</th>
-    </tr>
-  </thead>
-  <tbody >
-    <tr>
-    	<td>001</td>
-    	<td>AAA AAA</td>
-    	<td>2000/01/01</td>
-    	<td>AAA@example.com</td>
-    </tr>
-    <tr>
-    	<td>002</td>
-    	<td>BBB BBB</td>
-    	<td>2000/05/10</td>
-    	<td>BBB@example.com</td>
-    </tr>
-    <tr>
-    	<td>002</td>
-    	<td>CCC CCC</td>
-    	<td>2000/11/07</td>
-    	<td>CCC@example.com</td>
-    </tr>
-    <tr>
-    	<td>003</td>
-    	<td>DDD DDD</td>
-    	<td>2000/06/11</td>
-    	<td>DDD@example.com</td>
-    </tr>
-    <tr>
-    	<td>004</td>
-    	<td>EEE EEE</td>
-    	<td>2000/04/23</td>
-    	<td>EEE@example.com</td>
-    </tr>
-    <tr>
-    	<td>005</td>
-    	<td>FFF FFF</td>
-    	<td>2000/10/30</td>
-    	<td>FFF@example.com</td>
-    </tr>
-  </tbody>
-</table>
-<div id="dialog" title="Basic dialog">
-  <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+<div id="dialog" title="新規追加">
+
 </div>

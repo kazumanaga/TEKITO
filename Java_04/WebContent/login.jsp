@@ -1,11 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <jsp:include page="header.jsp"/>
-
+<script type="text/javascript" src="js/test.js"></script>
 
 <!-- カーソル -->
 <body onLoad="document.LoginCheck.userId.focus()">
-<span class="ui-icon ui-icon-arrowthick-2-se-nw"></span>a
 <!-- ログイン -->
 <s:form action="LoginCheck">
     <div>
@@ -58,22 +57,32 @@
 
 	<form name="js">
 	<p>
-	<input type='button' id='button3' onClick="addRow()" value='追加'>
+	<input type='button' id='button3' onClick="dialogOpenAdd()" value='追加'>
 	<input type='button' id='button2' onClick="updataRow()"  value='更新'>
 	<input type='button' id='button0' onClick="deleteRow()" value='削除'>
 	</p>
 
-	<ul>
-	<li style="display: inline;margin-right: 120px;top:10px;">ユーザ名</li>
-	<li style="display: inline;margin-right: 120px;">パスワード</li>
-	<li style="display: inline;">表示名</li>
-	</ul>
-	<p>
-	<input type="text" name="userid" id = "userId" />
-	<input type="text" name="pass" id = "userPassword" />
-	<input type="text" name="display" id = "userName" />
-	</p>
+	<div id="dialog" title="新規追加">
+	<p>ID:</p>
+	<p>ユーザ名:<input type="text" name="userid" id = "userId" /></p>
+	<p>パスワード:<input type="text" name="pass" id = "userPassword" /></p>
+	<p>表示名:<input type="text" name="display" id = "userName" /></p>
+		<button class="dlg-btn">OK</button>
+		<button class="dlg-btn">Cancel</button>
+	<s:form action="Upload" enctype="multipart/form-data">
+		<input id="fileselect" type="file" multiple="multiple"/>
+	</s:form>
+	<div id = "mass">
+	</div>
+	</div>
+	<script>
+	$('.dlg-btn').button({
+		icons: { primary: "ui-icon-check" },
+	});
+	</script>
+
 	</form>
+
 	</div>
 
 </s:if>
@@ -85,6 +94,11 @@
 <div style="color:#a5a5ff; font-size:20pt; font-weight:bold;">ログイン</div>
 
 </body>
-<div id="dialog" title="新規追加">
-
-</div>
+<form action="upload.action" method="post" enctype="multipart/form-data">
+    <input type="file" name="myfile" />
+    <input type="submit" />
+</form>
+<s:form action="Uploadd">
+<s:textfield name="id" />
+<s:submit value="ログイン"/>
+</s:form>

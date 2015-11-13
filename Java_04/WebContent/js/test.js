@@ -1,9 +1,18 @@
-//グローバル
+//-----------------------------------------------------------
+//	[test.js]	KAZUMA NAGAOKA
+//
+//-----------------------------------------------------------
+//##グローバル変数
 var g_CurrentNum = -1;
 var g_UpdataCurrentNum = -1;
 var g_SelectAction = false;
 var g_tableNum = -1;
-// メソッド
+
+
+//-----------------------------------------------------------
+//	ロード実行
+//	--スクリプトが実行できる状態になったら--
+//-----------------------------------------------------------
 $(document).ready( function() {
 
 
@@ -12,11 +21,12 @@ $(document).ready( function() {
 		    url: 'ajax/DBConection',
 		    datatype: 'json',
 		   mtype: 'GET',
-		   colNames:['No', 'ユーザID', 'パスワード', '表示名'],
+		   colNames:['No', 'ユーザID', 'パスワード',"添付<br>書類", '表示名'],
 		   colModel :[
 		     {name:'id', width:95,editable:true},
 		     {name:'userId', width:90},
 		     {name:'userPass', width:90},
+		     {index:'rb', name:'rb', align:'center',width:90,height:55, formatter:rbtnFmatter},
 		     {name:'displayName', width:150},
 		   ],
            cellEdit: false,                // false: セルの直接編集はしな
@@ -34,6 +44,16 @@ $(document).ready( function() {
 		   }
 		});
 
+	//
+	function rbtnFmatter(cellvalue, options, rowObject)
+	{
+	    //input タグをリターンする
+	    var rbtn = '<input type="button" value="添付" name="rbtn" id="rbtn' + options['rowId'] + '" ' +
+	               'onclick="selRow(\'' + options['rowId'] + '\')"/>';
+
+	    return rbtn;
+	}
+
 	$('#list').click(function(){
 
 		SelectRowUpdata();
@@ -43,25 +63,22 @@ $(document).ready( function() {
 		autoOpen: false,
 		width: 640,
 		height:320,
-		buttons: [
-			{
-				text: "Ok",
-				click: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			{
-				text: "Cancel",
-				click: function() {
-					$( this ).dialog( "close" );
-				}
-			}
-		]
+		buttons: []
 	});
+
+	// ファイル選択後に処理
+	$("#fileselect").change(function () {
+		T();
+	    //$(this).closest("form").submit();
+	  });
 
 
 
 });
+//-----------------------------------------------------------
+//	重複チェック
+//	--ユーザID パスワード--	return bool
+//-----------------------------------------------------------
 function OverlapCheck(chId1,chPass1,chId2,chPass2)
 {
 	if(chId1 == chId2 && chPass1 == chPass2)
@@ -70,127 +87,117 @@ function OverlapCheck(chId1,chPass1,chId2,chPass2)
 	}
 	return false;
 }
-function jsonParser(data) {
-    var message = "";
-    var dataArray = data.error;
-    for(var count in dataArray){
-        message = message + dataArray[count].errorCode;
-        message = message + ' ： ';
-        message = message + dataArray[count].errorMessage;
-        message = message + '<br/>';
-    }
-    return message;
-}
-$(function()
+//-----------------------------------------------------------
+//	ダイアログボックス open
+//	--jQuery--
+//-----------------------------------------------------------
+function dialogOpenAdd()
 {
-	var element0 = document.getElementById("userId");
-	var element1 = document.getElementById("userPassword");
-	var element2 = document.getElementById("userName");
-
-
-	  // 行選択処理
-	  $("tr").click( function(){
-		  var CurrentIdList = $("#list").getGridParam("selrow");
-
-		});
-});
+	$( "#dialog" ).dialog( "open" );
+}
+//-----------------------------------------------------------
+//	データベース	追加
+//
+//-----------------------------------------------------------
 function addRow()
 {
+	// ID取得(キャレット変更用) ダイアログVer
+	var element0 = $("#userId");
+	var element1 = $("#userPassword");
+	var element2 = $("#userName");
 
-	$( "#dialog" ).dialog( "open" );
-//	// ID取得(キャレット変更用)
-//	var element0 = document.getElementById("userId");
-//	var element1 = document.getElementById("userPassword");
-//	var element2 = document.getElementById("userName");
-//
-//    // 現在の最大のID番号取得
-//    var arrrows = $("#list").getRowData();
-//    var max = 0;
-//
-//    for (i = 0; i < arrrows.length; i++)
-//    {
-//        var cur = parseInt(arrrows[i].id);
-//        if (max < cur)
-//        {
-//            max = cur;
-//            console.log(max);
-//        }
-//    }
-//    var tmpData = {
-//    		no: max + 1,
-//    };
-//    var str1=document.js.userid.value;
-//    var str2=document.js.pass.value;
-//    var str3=document.js.display.value;
-//
-//    var data = {"UserNo" : tmpData.no,
-//			"UserName" : str1,
-//			"UserPass" : str2,
-//			"DispName" : str3,
-//		};
-//
-//    // rowId取得(#list)
-//	var arrayData =[]; // 配列の初期化
-//	var overFlag = false;
-//
-//	if(!str1=="" && !str2=="" && !str3=="")
-//	{
-//
-//		for(var i = 0;i<=arrrows.length;i++)
-//		{
-//			arrayData[i] = $('#list').jqGrid('getRowData', i+1);
-//			if(OverlapCheck(arrayData[i].userId,arrayData[i].userPass,data.UserName,data.UserPass))
-//			{
-//				alert("同じID又は同じﾊﾟｽﾜｰﾄﾞがあります");
-//				overFlag = true;
-//				break;
-//			}
-//		}
-//
-//		if(!overFlag)
-//		{
-//			 $.ajax({
-//		         type: "POST",
-//		         url: 'DataBase/DataBaseAdd',
-//		         data:data,
-//		         dataType: "json",
-//		         async: false,
-//		         success: function(){
-//				g_CurrentNum = 0;
-//				//最大行番号数選択
-//				//DataBase更新
-//				DataBaseUpdata();
-//
-//					}
-//		     });
-//		}
-//
-//	}
-//	else
-//	{
-//		alert("未記入項目があります");
-//		if(str1=="")
-//		{
-//			element0.focus();
-//			element0.setSelectionRange(0,0);
-//		}
-//		else if(str2=="")
-//		{
-//			element1.focus();
-//			element1.setSelectionRange(0,0);
-//		}
-//		else if(str3=="")
-//		{
-//			element2.focus();
-//			element2.setSelectionRange(0,0);
-//		}
-//
-//	}
+    // 現在の最大のID番号取得
+    var arrrows = $("#list").getRowData();
+    var max = 0;
+
+    for (i = 0; i < arrrows.length; i++)
+    {
+        var cur = parseInt(arrrows[i].id);
+        if (max < cur)
+        {
+            max = cur;
+            //console.log(max);
+        }
+    }
+    var tmpData = {
+    		no: max + 1,
+    };
+    var str1=element0.val();
+    var str2=element1.val();
+    var str3=element2.val();
+
+    var data = {"UserNo" : tmpData.no,
+			"UserName" : str1,
+			"UserPass" : str2,
+			"DispName" : str3,
+		};
+
+    // rowId取得(#list)
+	var arrayData =[]; // 配列の初期化
+	var overFlag = false;
+
+	if(!str1=="" && !str2=="" && !str3=="")
+	{
+
+		for(var i = 0;i<=arrrows.length;i++)
+		{
+			arrayData[i] = $('#list').jqGrid('getRowData', i+1);
+			if(OverlapCheck(arrayData[i].userId,arrayData[i].userPass,data.UserName,data.UserPass))
+			{
+				alert("同じID又は同じﾊﾟｽﾜｰﾄﾞがあります");
+				overFlag = true;
+				break;
+			}
+		}
+
+		if(!overFlag)
+		{
+			 $.ajax({
+		         type: "POST",
+		         url: 'DataBase/DataBaseAdd',
+		         data:data,
+		         dataType: "json",
+		         async: false,
+		         success: function(){
+				g_CurrentNum = 0;
+				//最大行番号数選択
+				//DataBase更新
+				DataBaseUpdata();
+
+					}
+		     });
+		}
+		$( "#dialog" ).dialog( "close" );
+
+	}
+	else
+	{
+		alert("未記入項目があります");
+		if(str1=="")
+		{
+			element0.focus();
+			element0.setSelectionRange(0,0);
+		}
+		else if(str2=="")
+		{
+			element1.focus();
+			element1.setSelectionRange(0,0);
+		}
+		else if(str3=="")
+		{
+			element2.focus();
+			element2.setSelectionRange(0,0);
+		}
+
+	}
 
 
 
 }
-
+//-----------------------------------------------------------
+//データベース	削除
+//
+//-----------------------------------------------------------
 function deleteRow()
 {
     // 選択されている行番号を取得
@@ -241,6 +248,10 @@ function deleteRow()
 	// $("#list").setSelection(idyhoo[8],false); 反応なし
 	// $("#list").resetSelection 選択解除
 }
+//-----------------------------------------------------------
+//データベース	更新
+//
+//-----------------------------------------------------------
 function updataRow()
 {
     // 選択されている行番号を取得
@@ -309,6 +320,10 @@ function updataRow()
 
 
 }
+//-----------------------------------------------------------
+//
+//
+//-----------------------------------------------------------
 function DataBaseUpdata()
 {
 
@@ -337,6 +352,10 @@ function DataBaseUpdata()
 		});
 
 }
+//-----------------------------------------------------------
+//
+//
+//-----------------------------------------------------------
 function SelectRow()
 {
 	var rowMax = $("#list").getGridParam("records");
@@ -363,6 +382,10 @@ function SelectRow()
 		g_UpdataCurrentNum = -1;
 	}
 }
+//-----------------------------------------------------------
+//
+//
+//-----------------------------------------------------------
 function SelectRowUpdata()
 {
 	// ID取得(キャレット変更用)
@@ -394,4 +417,30 @@ function SelectRowUpdata()
 
 
 }
+function O()
+{
+	$.ajax({
+        type: "POST",
+        url: 'DataBase/DataBaseDelete',
+        data:data,
+        dataType: "json",
+        async: false,
+        success: function(){
+		//DataBase更新
+		T();
 
+			}
+    });
+
+}
+function T()
+{
+	 var info = document.getElementById('mass');
+	 var h1Node = document.createElement('h1');
+	 /*（3）新たにテキストノードを作成する*/
+	 var textNode = document.createTextNode('こんにちは');
+	 /*（4）作成したテキストノードをH1タグ要素の子要素として追加する*/
+	 h1Node.appendChild(textNode);
+	 /*（1）Pタグに、完成したH1タグを追加する*/
+	info.appendChild(h1Node);
+}

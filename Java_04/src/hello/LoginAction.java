@@ -104,6 +104,7 @@ public class LoginAction extends AbstractAction {
     			this.errmsg = "ログイン成功しました";
     			this.pattern = "ok";
     			this.state = "in";
+
     			return SUCCESS;
     		}
 

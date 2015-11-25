@@ -25,6 +25,7 @@ public class GetUsersAction extends AbstractAction {
 	}
 
 
+
 	public String execute() throws Exception {
         this.sessionMap.put("userId", null);
         this.userId = "Struts2";

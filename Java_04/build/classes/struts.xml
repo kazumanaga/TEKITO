@@ -43,7 +43,9 @@
 		<result name="error">/login.jsp</result>
 		<result name="main">/login.jsp</result>
 	</action>
-
+	<action name="doUpload" method = "FileUplo" class="hello.UploadSampleAction">
+		<result name="success">/uploadsample.jsp</result>
+	</action>
 </package>
 
  <package name="ajax" namespace="/ajax" extends="json-default">

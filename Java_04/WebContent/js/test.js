@@ -93,6 +93,15 @@ function OverlapCheck(chId1,chPass1,chId2,chPass2)
 //-----------------------------------------------------------
 function dialogOpenAdd()
 {
+	var hiduke=new Date();
+	var year = hiduke.getFullYear();
+	var month = hiduke.getMonth()+1;
+	var day = hiduke.getDate();
+	var hour = hiduke.getHours();
+	var minute = hiduke.getMinutes();
+	var second = hiduke.getSeconds();
+
+	document.getElementById('datetime').value = ""+year+"-"+month+"-"+day+"T"+hour+":"+minute+":"+second;
 	$( "#dialog" ).dialog( "open" );
 }
 //-----------------------------------------------------------
@@ -435,12 +444,11 @@ function O()
 }
 function T()
 {
-	 var info = document.getElementById('mass');
-	 var h1Node = document.createElement('h1');
-	 /*（3）新たにテキストノードを作成する*/
-	 var textNode = document.createTextNode('こんにちは');
-	 /*（4）作成したテキストノードをH1タグ要素の子要素として追加する*/
-	 h1Node.appendChild(textNode);
-	 /*（1）Pタグに、完成したH1タグを追加する*/
-	info.appendChild(h1Node);
+	$('.dlg-btn').button({
+		icons: { primary: "ui-icon-check" },
+	});
+	document.getElementById('mass').innerHTML = '<button class="dlg-btn">OK</button>';
+	document.getElementById( "ha" ).setAttribute( "class", "dlg-btn" );
+	//document.getElementById('mass').innerHTML = '<p>AAAAAAAAAAAA</p>';
+
 }

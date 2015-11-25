@@ -109,7 +109,7 @@ public class DataBaseAction extends AbstractAction {
     }
     // 更新
     public String DataBaseEdit() throws Exception {
-    	System.out.print(UserNo);
+
 
     	try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();

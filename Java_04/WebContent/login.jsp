@@ -63,17 +63,19 @@
 	</p>
 
 	<div id="dialog" title="新規追加">
+	登録日時：<input type="datetime-local" step=1 id="datetime">
 	<p>ID:</p>
 	<p>ユーザ名:<input type="text" name="userid" id = "userId" /></p>
 	<p>パスワード:<input type="text" name="pass" id = "userPassword" /></p>
 	<p>表示名:<input type="text" name="display" id = "userName" /></p>
-		<button class="dlg-btn">OK</button>
-		<button class="dlg-btn">Cancel</button>
+		<button class="dlg-btn" style="position: absolute; top: 25px; left:350px;">OK</button>
+		<button class="dlg-btn" style="position: absolute; top: 25px; left:480px;">Cancel</button>
+	<div id = "mass">
+	</div>
 	<s:form action="Upload" enctype="multipart/form-data">
 		<input id="fileselect" type="file" multiple="multiple"/>
 	</s:form>
-	<div id = "mass">
-	</div>
+
 	</div>
 	<script>
 	$('.dlg-btn').button({

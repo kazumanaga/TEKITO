@@ -66,6 +66,13 @@ $(document).ready( function() {
 		buttons: []
 	});
 
+	$( "#dialogU" ).dialog({
+		autoOpen: false,
+		width: 640,
+		height:320,
+		buttons: []
+	});
+
 	// ファイル選択後に処理
 	$("#fileselect").change(function () {
 		T();
@@ -88,12 +95,13 @@ function OverlapCheck(chId1,chPass1,chId2,chPass2)
 	return false;
 }
 //-----------------------------------------------------------
-//	ダイアログボックス open
+//	ダイアログボックスverADD open
 //	--jQuery--
 //-----------------------------------------------------------
 function dialogOpenAdd()
 {
-	var hiduke=new Date();
+	$( "#dialogU" ).dialog( "close" );
+	var hiduke = new Date();
 	var year = hiduke.getFullYear();
 	var month = hiduke.getMonth()+1;
 	var day = hiduke.getDate();
@@ -101,8 +109,38 @@ function dialogOpenAdd()
 	var minute = hiduke.getMinutes();
 	var second = hiduke.getSeconds();
 
-	document.getElementById('datetime').value = ""+year+"-"+month+"-"+day+"T"+hour+":"+minute+":"+second;
+	document.getElementById('datetime').value = year+"-"+month+"-"+day+"T"+hour+":"+minute+":"+second;
+
 	$( "#dialog" ).dialog( "open" );
+}
+//-----------------------------------------------------------
+//ダイアログボックスverUPDATE open
+//--jQuery--
+//-----------------------------------------------------------
+function dialogOpenUpdate()
+{
+	$( "#dialog" ).dialog( "close" );
+    // 現在の選択されている行を取得
+	var CurrentIdList = $("#list").getGridParam("selrow");
+
+	// 登録日時はファイルを作り以降更新
+	var hiduke = new Date();
+	var year = hiduke.getFullYear();
+	var month = hiduke.getMonth()+1;
+	var day = hiduke.getDate();
+	var hour = hiduke.getHours();
+	var minute = hiduke.getMinutes();
+	var second = hiduke.getSeconds();
+	document.getElementById('datetime2').value = year+"-"+month+"-"+day+"T"+hour+":"+minute+":"+second;
+
+	if(CurrentIdList)
+	{
+		$( "#dialogU" ).dialog( "open" );
+	}
+	else
+	{
+		alert("選択されてません");
+	}
 }
 //-----------------------------------------------------------
 //	データベース	追加
@@ -110,7 +148,6 @@ function dialogOpenAdd()
 //-----------------------------------------------------------
 function addRow()
 {
-	// ID取得(キャレット変更用) ダイアログVer
 	var element0 = $("#userId");
 	var element1 = $("#userPassword");
 	var element2 = $("#userName");
@@ -153,7 +190,7 @@ function addRow()
 			arrayData[i] = $('#list').jqGrid('getRowData', i+1);
 			if(OverlapCheck(arrayData[i].userId,arrayData[i].userPass,data.UserName,data.UserPass))
 			{
-				alert("同じID又は同じﾊﾟｽﾜｰﾄﾞがあります");
+				alert("入力されたユーザー名とパスワードは\nすでに登録されているため\n追加登録できません");
 				overFlag = true;
 				break;
 			}
@@ -175,8 +212,9 @@ function addRow()
 
 					}
 		     });
+			 $( "#dialog" ).dialog( "close" );
 		}
-		$( "#dialog" ).dialog( "close" );
+
 
 	}
 	else
@@ -209,6 +247,8 @@ function addRow()
 //-----------------------------------------------------------
 function deleteRow()
 {
+	$( "#dialog" ).dialog( "close" );
+	$( "#dialogU" ).dialog( "close" );
     // 選択されている行番号を取得
     var sel_id = $("#list").getGridParam("selrow");
     var index = $("#list").jqGrid('getInd',sel_id); // counting from 1
@@ -275,15 +315,19 @@ function updataRow()
     // 現在の最大のID番号取得
     var arrrows = $("#list").getRowData();
 
-	// ID取得(キャレット変更用)
-	var element0 = document.getElementById("userId");
-	var element1 = document.getElementById("userPassword");
-	var element2 = document.getElementById("userName");
+ // ID取得(キャレット変更用) ダイアログVer
+	var element0 = $("#userId2");
+	var element1 = $("#userPassword2");
+	var element2 = $("#userName2");
+
+    var str1=element0.val();
+    var str2=element1.val();
+    var str3=element2.val();
 
 	var data = {"UserNo" : listData.id,
-			"UserName" : element0.value,
-			"UserPass" : element1.value,
-			"DispName" : element2.value,
+			"UserName" : str1,
+			"UserPass" : str2,
+			"DispName" : str3,
 		};
 
     // rowId取得(#list)
@@ -294,15 +338,13 @@ function updataRow()
 	{
 		for(var i = 0;i<=arrrows.length;i++)
 		{
-			if(i !=index-1)
+			arrayData[i] = $('#list').jqGrid('getRowData', i);
+
+			if(OverlapCheck(arrayData[i].userId,arrayData[i].userPass,data.UserName,data.UserPass))
 			{
-				arrayData[i] = $('#list').jqGrid('getRowData', i+1);
-				if(OverlapCheck(arrayData[i].userId,arrayData[i].userPass,data.UserName,data.UserPass))
-				{
-					alert("同じID又は同じﾊﾟｽﾜｰﾄﾞがあります");
-					overFlag = true;
-					break;
-				}
+				alert("入力されたユーザー名とパスワードは\nすでに登録されているため\n更新できません");
+				overFlag = true;
+				break;
 			}
 		}
 		if(!overFlag)
@@ -398,9 +440,9 @@ function SelectRow()
 function SelectRowUpdata()
 {
 	// ID取得(キャレット変更用)
-	var element0 = document.getElementById("userId");
-	var element1 = document.getElementById("userPassword");
-	var element2 = document.getElementById("userName");
+	var element0 = document.getElementById("userId2");
+	var element1 = document.getElementById("userPassword2");
+	var element2 = document.getElementById("userName2");
 
 	// 選択されている行データ取得
 	var selectRow = $("#list").getGridParam('selrow');

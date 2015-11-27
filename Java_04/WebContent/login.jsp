@@ -58,7 +58,7 @@
 	<form name="js">
 	<p>
 	<input type='button' id='button3' onClick="dialogOpenAdd()" value='追加'>
-	<input type='button' id='button2' onClick="updataRow()"  value='更新'>
+	<input type='button' id='button2' onClick="dialogOpenUpdate()"  value='更新'>
 	<input type='button' id='button0' onClick="deleteRow()" value='削除'>
 	</p>
 
@@ -68,7 +68,32 @@
 	<p>ユーザ名:<input type="text" name="userid" id = "userId" /></p>
 	<p>パスワード:<input type="text" name="pass" id = "userPassword" /></p>
 	<p>表示名:<input type="text" name="display" id = "userName" /></p>
-		<button class="dlg-btn" style="position: absolute; top: 25px; left:350px;">OK</button>
+		<button class="dlg-btn" onClick="addRow()" style="position: absolute; top: 25px; left:350px;">OK</button>
+		<button class="dlg-btn" style="position: absolute; top: 25px; left:480px;">Cancel</button>
+	<div id = "mass">
+	</div>
+	<s:form action="Upload" enctype="multipart/form-data">
+		<input id="fileselect" type="file" multiple="multiple"/>
+	</s:form>
+
+	</div>
+	<script>
+	$('.dlg-btn').button({
+		icons: { primary: "ui-icon-check" },
+	});
+	</script>
+
+	</form>
+
+	</div>
+
+	<div id="dialogU" title="更新">
+	登録日時：<input type="datetime-local" step=1 id="datetime2">
+	<p>ID:</p>
+	<p>ユーザ名:<input type="text" name="userid" id = "userId2" /></p>
+	<p>パスワード:<input type="text" name="pass" id = "userPassword2" /></p>
+	<p>表示名:<input type="text" name="display" id = "userName2" /></p>
+		<button class="dlg-btn" onClick="updataRow()" style="position: absolute; top: 25px; left:350px;">OK</button>
 		<button class="dlg-btn" style="position: absolute; top: 25px; left:480px;">Cancel</button>
 	<div id = "mass">
 	</div>

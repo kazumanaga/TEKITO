@@ -6,27 +6,38 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.FileUtils;
-import org.apache.struts2.ServletActionContext;
 
 import com.opensymphony.xwork2.ActionSupport;
 
 public class UploadSampleAction extends ActionSupport  {
-    HttpServletRequest request;
-    public HttpServletResponse response;
+
 	private String name;
+	private File[] file;
+    private String[] contentType;
+    private String[] filename;
+    private static int count = 0;
+    private String fontest;
+    private List<FileList> files = new ArrayList<FileList>();
 
-      private File[] file;
-      private String[] contentType;
-      private String[] filename;
 
-      private List<FileList> files = new ArrayList<FileList>();
+      /**
+	 * fontestを取得します。
+	 * @return fontest
+	 */
+	public String getFontest() {
+	    return fontest;
+	}
 
-      public List<FileList> getFiles() {
+	/**
+	 * fontestを設定します。
+	 * @param fontest fontest
+	 */
+	public void setFontest(String fontest) {
+	    this.fontest = fontest;
+	}
+
+	public List<FileList> getFiles() {
   		return files;
   	}
 
@@ -55,6 +66,18 @@ public class UploadSampleAction extends ActionSupport  {
 
          return SUCCESS;
       }
+
+  	private static void count(File[] list) {
+		for (File f : list) {
+			if (f.isDirectory()) {
+				count(f.listFiles());
+			} else if (f.isFile()) {
+				System.out.println(f.getName());
+				count++;
+			}
+		}
+	}
+      // ファイルコピー
       public String FileUplo() throws Exception {
 
     	  //String x = file.getName();
@@ -64,9 +87,10 @@ public class UploadSampleAction extends ActionSupport  {
     		  fileData.setM_Id(i);
     		  files.add(fileData);
     	  }
-    	  String name = filename[0];
-    	  HttpServletRequest request = ServletActionContext.getRequest();
-    	  ServletContext con = ServletActionContext.getServletContext();
+
+    	  // ファイル保管庫 存在しない場合、フォルダ作成
+    	  // ファイル保管庫の中に指定IDのフォルダ存在しない場合、フォルダ作成
+    	  // ファイルコピー
     	  String path = "D:/servlet-sample/upload/data";
     	  File newdir = new File(path + "/id0");
         	if (newdir.mkdirs()){
@@ -86,7 +110,13 @@ public class UploadSampleAction extends ActionSupport  {
   	 // filewriter.write("こんにちは");
   	 // filewriter.close();
 
-  	FileUtils.copyFile(file[0],newdir2);
+  	  //
+  	  FileUtils.copyFile(file[0],newdir2);
+
+  	  // ファイル数取得
+  	  File dir = new File(path + "/id0");
+  	  //count(dir.listFiles());
+  	  System.out.println(count);
 
 
     	  return SUCCESS;

@@ -64,18 +64,19 @@
 
 	<div id="dialog" title="新規追加">
 	登録日時：<input type="datetime-local" step=1 id="datetime">
-	<p>ID:</p>
+	<br><br>
+	<b>ID: </b><b id ="addId"></b>
 	<p>ユーザ名:<input type="text" name="userid" id = "userId" /></p>
 	<p>パスワード:<input type="text" name="pass" id = "userPassword" /></p>
 	<p>表示名:<input type="text" name="display" id = "userName" /></p>
-		<button class="dlg-btn" onClick="addRow()" style="position: absolute; top: 25px; left:350px;">OK</button>
-		<button class="dlg-btn" style="position: absolute; top: 25px; left:480px;">Cancel</button>
-	<div id = "mass">
-	</div>
 	<s:form action="Upload" enctype="multipart/form-data">
 		<input id="fileselect" type="file" multiple="multiple"/>
 	</s:form>
-
+			<button class="dlg-btn" onClick="updataRow()" style="position: absolute; top: 10px; left:400px;">OK</button>
+			<button class="dlg-btn" style="position: absolute; top: 10px; left:500px;">Cancel</button>
+			<button class="dlg-btn" onClick="UploadClear()">Yahooo!</button>
+		<div id="fileso" style = "position: absolute;top: 50px; left:400px;">
+		</div>
 	</div>
 	<script>
 	$('.dlg-btn').button({
@@ -88,19 +89,24 @@
 	</div>
 
 	<div id="dialogU" title="更新">
-	登録日時：<input type="datetime-local" step=1 id="datetime2">
-	<p>ID:</p>
-	<p>ユーザ名:<input type="text" name="userid" id = "userId2" /></p>
-	<p>パスワード:<input type="text" name="pass" id = "userPassword2" /></p>
-	<p>表示名:<input type="text" name="display" id = "userName2" /></p>
-		<button class="dlg-btn" onClick="updataRow()" style="position: absolute; top: 25px; left:350px;">OK</button>
-		<button class="dlg-btn" style="position: absolute; top: 25px; left:480px;">Cancel</button>
-	<div id = "mass">
-	</div>
-	<s:form action="Upload" enctype="multipart/form-data">
-		<input id="fileselect" type="file" multiple="multiple"/>
-	</s:form>
+		<s:form action="Upload" enctype="multipart/form-data">
+		登録日時：<input type="datetime-local" step=1 id="datetime2">
+		<br><br>
+		<b>ID: </b><b id ="uid"></b><input type="hidden" name="uid" id = "userNum" />
+		<p>ユーザ名:<input type="text" name="userid" id = "userId2" /></p>
+		<p>パスワード:<input type="text" name="pass" id = "userPassword2" /></p>
+		<p>表示名:<input type="text" name="display" id = "userName2" /></p>
 
+		<div id = "mass">
+		</div>
+		<button type="button" onclick="AddFile()"></button>
+		<input id="fileselect" type="file" multiple="multiple"/>
+		</s:form>
+			<button class="dlg-btn" onClick="updataRow()" style="position: absolute; top: 10px; left:400px;">OK</button>
+			<button class="dlg-btn" style="position: absolute; top: 10px; left:500px;">Cancel</button>
+		<div id="files" style = "position: absolute;top: 50px; left:400px;">
+		<!-- <div id="files" style="display:none;"> -->
+		</div>
 	</div>
 	<script>
 	$('.dlg-btn').button({
@@ -108,9 +114,6 @@
 	});
 	</script>
 
-	</form>
-
-	</div>
 
 </s:if>
 

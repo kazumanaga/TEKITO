@@ -9,7 +9,7 @@
 		<input type="file" name="upload" multiple="multiple" />
 	</div>
 	<div>
-		<input type="text" name="name" />
+		<input type="text" name="fontest" />
 	</div>
 	<button type="submit">send</button>
 </form>

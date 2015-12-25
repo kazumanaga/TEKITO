@@ -3,27 +3,20 @@
     "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
     "http://struts.apache.org/dtds/struts-2.3.dtd">
 <struts>
-<package name="up" namespace="/" extends="struts-default" >
-
-	<action name="Up"  class="hello.UploadAction">
-	    <result name="success">login.jsp</result>
-	    <result name="login">/login.jsp</result>
+<package name="uplo" namespace="/uplo" extends="json-default" >
+	<action name="GetImageFileNum" method="GetImageFileNum" class="hello.UploadAction">
+		<result name="success" type="json">
+			<param name="root">m_Num</param>
+		</result>
+	</action>
+	<action name="GetImageFileName" method="GetImageFileName" class="hello.UploadAction">
+		<result name="success" type="json">
+			<param name="root">ImageFile</param>
+		</result>
 	</action>
 
-	<action name="Upload" method="doUpload" class="hello.UploadAction">
-    <result name="success">login.jsp</result>
-    <result>/login.jsp</result>
-	</action>
-	<action name="Uploadd" method="MakeDirectory" class="hello.UploadAction">
-    <result name="success">login.jsp</result>
-    <result name="login">/login.jsp</result>
-	</action>
 </package>
 <package name="HelloWorld" namespace="/" extends="struts-default" >
-
-
-
-
 	<action name="Login"  class="hello.LoginAction">
 		<result name="success">/login.jsp</result>
 		<result name="error">/login.jsp</result>

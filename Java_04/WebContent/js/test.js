@@ -61,22 +61,30 @@ $(document).ready( function() {
 
 	$( "#dialog" ).dialog({
 		autoOpen: false,
-		width: 640,
+		width: 680,
 		height:320,
 		buttons: []
 	});
 
 	$( "#dialogU" ).dialog({
 		autoOpen: false,
-		width: 640,
+		width: 680,
 		height:320,
 		buttons: []
 	});
 
 	// ファイル選択後に処理
 	$("#fileselect").change(function () {
-		T();
+		// 現在のファイル数
+		var files= document.getElementById("fileselect").files;
+		for (var i = 0; i < files.length; i++){
+			// ファイル数分スロット作成
+			addfile2(i,files[i].name);
+		    //alert(files[i].name);
+		}
 	    //$(this).closest("form").submit();
+
+
 	  });
 
 
@@ -110,6 +118,22 @@ function dialogOpenAdd()
 	var second = hiduke.getSeconds();
 
 	document.getElementById('datetime').value = year+"-"+month+"-"+day+"T"+hour+":"+minute+":"+second;
+
+	var element4 = document.getElementById("addId");
+    // 現在の最大のID番号取得
+    var arrrows = $("#list").getRowData();
+    var max = 0;
+    for (i = 0; i < arrrows.length; i++)
+    {
+        var cur = parseInt(arrrows[i].id);
+        if (max < cur)
+        {
+            max = cur;
+            //console.log(max);
+        }
+    }
+    // 現在の最大ID割り当て
+    element4.innerHTML = max+1;
 
 	$( "#dialog" ).dialog( "open" );
 }
@@ -151,6 +175,7 @@ function addRow()
 	var element0 = $("#userId");
 	var element1 = $("#userPassword");
 	var element2 = $("#userName");
+
 
     // 現在の最大のID番号取得
     var arrrows = $("#list").getRowData();
@@ -372,7 +397,7 @@ function updataRow()
 
 }
 //-----------------------------------------------------------
-//
+// データベース更新
 //
 //-----------------------------------------------------------
 function DataBaseUpdata()
@@ -404,7 +429,7 @@ function DataBaseUpdata()
 
 }
 //-----------------------------------------------------------
-//
+// JQgrid 行選択
 //
 //-----------------------------------------------------------
 function SelectRow()
@@ -443,6 +468,8 @@ function SelectRowUpdata()
 	var element0 = document.getElementById("userId2");
 	var element1 = document.getElementById("userPassword2");
 	var element2 = document.getElementById("userName2");
+	var element3 = document.getElementById("userNum");
+	var element4 = document.getElementById("uid");
 
 	// 選択されている行データ取得
 	var selectRow = $("#list").getGridParam('selrow');
@@ -454,6 +481,8 @@ function SelectRowUpdata()
 			element0.value = rowdata.userId;
 			element1.value = rowdata.userPass;
 			element2.value = rowdata.displayName;
+			element3.value = rowdata.id;
+			element4.innerHTML = rowdata.id;
 	 }
 	 else
 	 {
@@ -463,6 +492,8 @@ function SelectRowUpdata()
 			element0.value = '';
 			element1.value = '';
 			element2.value = '';
+			element3.value = '';
+			element4.value = '';
 		}
 	 }
 
@@ -484,13 +515,90 @@ function O()
     });
 
 }
-function T()
+//-----------------------------------------------------------
+//アップロード(予定/後)画像 スロット追加
+// 強制的にスロット追加
+//-----------------------------------------------------------
+function AddFile()
 {
-	$('.dlg-btn').button({
-		icons: { primary: "ui-icon-check" },
+	for(var i=0;i<5;i++)
+	{
+		addfile(i);
+	}
+}
+//-----------------------------------------------------------
+//アップロード(予定/後)画像 スロット追加
+// 引数:(int num)
+//-----------------------------------------------------------
+function addfile(num)
+{
+	var count = num;
+	var con = $(files);
+	con.append("<input type='text' name='xxx' class='tekito"+count+"' /><button class='dlg-btn"+count+"'style='width:32px;height:32px;'onclick='TEST("+num+")'></button>");
+	$('.dlg-btn'+num).button({
+		icons: { primary: "ui-icon-closethick" },
 	});
-	document.getElementById('mass').innerHTML = '<button class="dlg-btn">OK</button>';
-	document.getElementById( "ha" ).setAttribute( "class", "dlg-btn" );
-	//document.getElementById('mass').innerHTML = '<p>AAAAAAAAAAAA</p>';
+}
+//-----------------------------------------------------------
+//アップロード(予定/後)画像 スロット追加
+// 引数:(int num,String name)
+//-----------------------------------------------------------
+function addfile2(num,name)
+{
+	var count = num;
+	var filename = name;
+	var con = $(fileso);
+	con.append("<input type='text' name='xxx' value='"+filename+"' class='tekito"+count+"' /><button class='dlg-btn"+count+"'style='width:32px;height:32px;'onclick='TEST("+num+")'></button>");
+	$('.dlg-btn'+num).button({
+		icons: { primary: "ui-icon-closethick" },
+	});
+}
+//-----------------------------------------------------------
+//アップロード(予定/後)画像 指定削除
+//
+//-----------------------------------------------------------
+function TEST(i)
+{
+	var ova = "";
+	// ajax通信 Actionへデータ(型:Integer) 送信と受信
+	var data = {"m_Num" : i,"param" : "asd"};
+	$.ajax({
+        type: "GET",
+        url: 'uplo/GetImageFileNum',
+        data:data,
+        dataType: "json",
+        async: false,
+        success: function(json){
+        	alert(json);
+
+			}
+    });
+	$.ajax({
+        type: "GET",
+        url: 'uplo/GetImageFileName',
+        dataType: "json",
+        async: false,
+        success: function(data){
+        	alert(data[0].m_filename);
+        	ova = data[0].m_filename;
+        	alert(ova);
+			}
+    });
+	$(files).find('.dlg-btn'+i).remove();
+	$(files).find('.tekito'+i).remove();
+
+}
+//-----------------------------------------------------------
+// アップロード(予定/後)画像クリア
+//
+//-----------------------------------------------------------
+function UploadClear()
+{
+	document.getElementById("fileselect").value = "";
+	// 子ノード解析
+	var aNode = document.getElementById("fileso");
+	for (var i =aNode.childNodes.length-1; i>0; i--) {
+		aNode.removeChild(aNode.childNodes[i]);
+	}
 
 }

@@ -24,12 +24,9 @@ public class GetUsersAction extends AbstractAction {
 		return users;
 	}
 
-
-
 	public String execute() throws Exception {
         this.sessionMap.put("userId", null);
         this.userId = "Struts2";
-
 
         return "success";
     }

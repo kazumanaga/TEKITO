@@ -211,6 +211,7 @@ function OverlapCheck(chId1,chPass1,chId2,chPass2)
 //-----------------------------------------------------------
 function dialogOpenAdd()
 {
+	$( "#dialogU" ).dialog( "close" );
 	var element0 = $("#userName");
 	element0.focus();
 	var element4 = document.getElementById("addId");
@@ -249,7 +250,14 @@ function dialogOpenUpdate()
 	var minute = hiduke.getMinutes();
 	var second = hiduke.getSeconds();
 	var timer2 = document.getElementById('datetime2');
-	timer2.value = year+"-"+month+"-"+day+"T"+hour+":"+minute+":"+second;
+	if(timer2)
+	{
+		timer2.value = year+"-"+month+"-"+day+"T"+hour+":"+minute+":"+second;
+	}
+	else
+	{
+		alert("エラー");
+	}
 
 	if(CurrentIdList)
 	{
@@ -492,8 +500,10 @@ function updataRow()
 			//DataBase更新
 			DataBaseUpdata();
 			g_UpdataCurrentNum = index;
+			$( "#dialogU" ).dialog( "close" );
 				}
 	     });
+
 		}
 
 	}

@@ -75,7 +75,6 @@
 	</s:form>
 			<button class="dlg-btn" onClick="addRow()" style="position: absolute; top: 10px; left:400px;">OK</button>
 			<button class="dlg-btn" onClick="close1()"style="position: absolute; top: 10px; left:500px;">Cancel</button>
-			<button class="dlg-btn" onClick="FileUpload1()">Yahooo!</button>
 		<div id="fileso1" style = "position: absolute;top: 50px; left:400px;">
 		</div>
 	</div>
@@ -126,15 +125,3 @@
 <s:else>
 <table id="list2"></table>
 </s:else>
-
-<div style="color:#a5a5ff; font-size:20pt; font-weight:bold;">ログイン</div>
-
-</body>
-<form action="upload.action" method="post" enctype="multipart/form-data">
-    <input type="file" name="myfile" />
-    <input type="submit" />
-</form>
-<s:form action="Uploadd">
-<s:textfield name="id" />
-<s:submit value="ログイン"/>
-</s:form>

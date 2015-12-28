@@ -7,6 +7,12 @@ var g_CurrentNum = -1;
 var g_UpdataCurrentNum = -1;
 var g_SelectAction = false;
 var g_tableNum = -1;
+var g_readFile = 0;
+var hiduke = new Date();
+
+// 配列
+var OrgArray = [];
+var OrgDeleteFileArray = [];
 
 
 //-----------------------------------------------------------
@@ -41,6 +47,33 @@ $(document).ready( function() {
 		   gridComplete : function(){
 			   SelectRow();
 			   SelectRowUpdata();
+			   ReadUploadFile();
+		   }
+		});
+
+	//DataBase更新
+	$("#list2").jqGrid({
+		    url: 'ajax/DBConection',
+		    datatype: 'json',
+		   mtype: 'GET',
+		   colNames:['No', 'ユーザID', 'パスワード', '表示名'],
+		   colModel :[
+		     {name:'id', width:95,editable:true},
+		     {name:'userId', width:90},
+		     {name:'userPass', width:90},
+		     {name:'displayName', width:150},
+		   ],
+           cellEdit: false,                // false: セルの直接編集はしな
+		   rowNum:100,
+		   rowList:[10,20,30],
+		   sortname: 'no',
+		   sortorder: "asc",
+		   scroll: true,
+		   viewrecords: true,
+		   caption: 'ログイン',
+
+		   gridComplete : function(){
+			   SelectRow();
 		   }
 		});
 
@@ -49,7 +82,7 @@ $(document).ready( function() {
 	{
 	    //input タグをリターンする
 	    var rbtn = '<input type="button" value="添付" name="rbtn" id="rbtn' + options['rowId'] + '" ' +
-	               'onclick="selRow(\'' + options['rowId'] + '\')"/>';
+	               'onclick="dialogOpenUpdate()"/>';
 
 	    return rbtn;
 	}
@@ -58,7 +91,17 @@ $(document).ready( function() {
 
 		SelectRowUpdata();
 		});
-
+	$("#button3").click(function ()
+	{
+		var year = hiduke.getFullYear();
+		var month = hiduke.getMonth()+1;
+		var day = hiduke.getDate();
+		var hour = hiduke.getHours();
+		var minute = hiduke.getMinutes();
+		var second = hiduke.getSeconds();
+		var huzake = document.getElementById("datetime1");
+		huzake.value = year+"-"+month+"-"+day+"T"+hour+":"+minute+":"+second;
+	});
 	$( "#dialog" ).dialog({
 		autoOpen: false,
 		width: 680,
@@ -73,17 +116,77 @@ $(document).ready( function() {
 		buttons: []
 	});
 
-	// ファイル選択後に処理
-	$("#fileselect").change(function () {
-		// 現在のファイル数
-		var files= document.getElementById("fileselect").files;
-		for (var i = 0; i < files.length; i++){
-			// ファイル数分スロット作成
-			addfile2(i,files[i].name);
-		    //alert(files[i].name);
-		}
-	    //$(this).closest("form").submit();
+	// ファイル選択クリックに処理
+	$("#fileselect1").click(function ()
+	{
+		UploadClear1();
+	});
+	// ファイル選択クリックに処理
+	$("#fileselect2").click(function ()
+	{
+		UploadClear2();
+	});
 
+	$("#dialogU").dialog({
+	    close: function() {
+	    	UploadClear();
+	    	SelectRowUpdata();
+
+	    }
+	});
+
+	// ファイル選択後に処理
+	$("#fileselect1").change(function () {
+		// 現在のファイル数
+		var files= document.getElementsByName("fileOs")[0].files;
+		var slotNum = 0;
+		slotNum = OrgArray.length;
+
+		if(files.length == 0)
+		{
+			files= document.getElementsByName("fileOs")[1].files;
+			// アップロード予定用
+			for (var i = 0; i < files.length; i++){
+				// ファイル数分スロット作成
+				addfile2(i+slotNum,files[i].name);
+				OrgArrayAdd(i);
+			}
+		}
+		else
+		{
+			// アップロード予定用
+			for (var i = 0; i < files.length; i++){
+				// ファイル数分スロット作成
+				addfile1(i+slotNum,files[i].name);
+				OrgArrayAdd(i);
+			}
+		}
+
+	  });
+	// ファイル選択後に処理
+	$("#fileselect2").change(function () {
+		// 現在のファイル数
+		var files= document.getElementsByName("fileOs")[0].files;
+		if(files.length == 0)
+		{
+			files= document.getElementsByName("fileOs")[1].files;
+			// アップロード予定用
+			for (var i = 0; i < files.length; i++){
+				// ファイル数分スロット作成
+				addfile2(i+g_readFile,files[i].name);
+				OrgArrayAdd(i);
+				OrgDeleteFileArrayAdd(files[i].name);
+			}
+		}
+		else
+		{
+			// アップロード予定用
+			for (var i = 0; i < files.length; i++){
+				// ファイル数分スロット作成
+				addfile1(i+g_readFile,files[i].name);
+				OrgArrayAdd(i);
+			}
+		}
 
 	  });
 
@@ -108,17 +211,8 @@ function OverlapCheck(chId1,chPass1,chId2,chPass2)
 //-----------------------------------------------------------
 function dialogOpenAdd()
 {
-	$( "#dialogU" ).dialog( "close" );
-	var hiduke = new Date();
-	var year = hiduke.getFullYear();
-	var month = hiduke.getMonth()+1;
-	var day = hiduke.getDate();
-	var hour = hiduke.getHours();
-	var minute = hiduke.getMinutes();
-	var second = hiduke.getSeconds();
-
-	document.getElementById('datetime').value = year+"-"+month+"-"+day+"T"+hour+":"+minute+":"+second;
-
+	var element0 = $("#userName");
+	element0.focus();
 	var element4 = document.getElementById("addId");
     // 現在の最大のID番号取得
     var arrrows = $("#list").getRowData();
@@ -129,9 +223,9 @@ function dialogOpenAdd()
         if (max < cur)
         {
             max = cur;
-            //console.log(max);
         }
     }
+
     // 現在の最大ID割り当て
     element4.innerHTML = max+1;
 
@@ -148,14 +242,14 @@ function dialogOpenUpdate()
 	var CurrentIdList = $("#list").getGridParam("selrow");
 
 	// 登録日時はファイルを作り以降更新
-	var hiduke = new Date();
 	var year = hiduke.getFullYear();
 	var month = hiduke.getMonth()+1;
 	var day = hiduke.getDate();
 	var hour = hiduke.getHours();
 	var minute = hiduke.getMinutes();
 	var second = hiduke.getSeconds();
-	document.getElementById('datetime2').value = year+"-"+month+"-"+day+"T"+hour+":"+minute+":"+second;
+	var timer2 = document.getElementById('datetime2');
+	timer2.value = year+"-"+month+"-"+day+"T"+hour+":"+minute+":"+second;
 
 	if(CurrentIdList)
 	{
@@ -223,6 +317,8 @@ function addRow()
 
 		if(!overFlag)
 		{
+			FileUpload1();
+
 			 $.ajax({
 		         type: "POST",
 		         url: 'DataBase/DataBaseAdd',
@@ -285,12 +381,23 @@ function deleteRow()
     // 選択されている行のﾃﾞｰﾀ取得
     var listData = $('#list').jqGrid('getRowData', CurrentIdList);
 	var data = {"UserNo" : listData.id};
-
+	var filedata = {"m_Num" : listData.id};
 	if(CurrentIdList)
 	{
 
 		if(window.confirm('削除しますか？'))
 		{
+
+
+			$.ajax({
+		        type: "POST",
+		        url: 'uplo/DeleteDirectory',
+		        data:filedata,
+		        dataType: "json",
+		        async: false,
+		        success: function(){
+					}
+		    });
 			$.ajax({
 		         type: "POST",
 		         url: 'DataBase/DataBaseDelete',
@@ -360,7 +467,7 @@ function updataRow()
 	var overFlag = false;
 
 	if(CurrentIdList)
-	{
+	{/*
 		for(var i = 0;i<=arrrows.length;i++)
 		{
 			arrayData[i] = $('#list').jqGrid('getRowData', i);
@@ -371,10 +478,11 @@ function updataRow()
 				overFlag = true;
 				break;
 			}
-		}
+		}*/
 		if(!overFlag)
 		{
-		 $.ajax({
+			FileUpload2();
+			$.ajax({
 	         type: "POST",
 	         url: 'DataBase/DataBaseEdit',
 	         data:data,
@@ -464,6 +572,44 @@ function SelectRow()
 //-----------------------------------------------------------
 function SelectRowUpdata()
 {
+	g_readFile = 0;
+	UploadClear();
+    // 現在の選択されている行を取得
+	var CurrentIdList = $("#list").getGridParam("selrow");
+    // rowId取得(#list)
+    var rowIdList = $("#list").jqGrid('getDataIDs');
+    var listData = $('#list').jqGrid('getRowData', CurrentIdList);
+
+    // IDをもとにImageフォルダにアクセス
+	// ajax通信 Actionへデータ(型:Integer) 送信と受信
+	var data = {"m_Num" : listData.id};
+	var fileNum=0;
+	$.ajax({
+        type: "GET",
+        url: 'uplo/GetImageFileNum',
+        data:data,
+        dataType: "json",
+        async: false,
+        success: function(json){
+        	fileNum = json;
+			}
+    });
+	$.ajax({
+        type: "GET",
+        url: 'uplo/GetImageFileName',
+        data:data,
+        dataType: "json",
+        async: false,
+        success: function(fileData){
+    		for (var i = 0; i < fileNum; i++){
+    			// ファイル数分スロット作成
+    			addfile2(i,fileData[i].m_filename);
+    			OrgArrayAdd(i);
+    			OrgDeleteFileArrayAdd(fileData[i].m_filename);
+    		}
+    		g_readFile = fileNum;
+		}
+    });
 	// ID取得(キャレット変更用)
 	var element0 = document.getElementById("userId2");
 	var element1 = document.getElementById("userPassword2");
@@ -534,7 +680,21 @@ function addfile(num)
 {
 	var count = num;
 	var con = $(files);
-	con.append("<input type='text' name='xxx' class='tekito"+count+"' /><button class='dlg-btn"+count+"'style='width:32px;height:32px;'onclick='TEST("+num+")'></button>");
+	con.append("<input type='text' name='xxx' class='tekito"+count+"' /><button class='dlg-btn"+count+"'style='width:32px;height:32px;'onclick='deleteSlot("+num+")'></button>");
+	$('.dlg-btn'+num).button({
+		icons: { primary: "ui-icon-closethick" },
+	});
+}
+//-----------------------------------------------------------
+//アップロード(予定/後)画像 スロット追加
+//引数:(int num,String name)
+//-----------------------------------------------------------
+function addfile1(num,name)
+{
+	var count = num;
+	var filename = name;
+	var con = $("#fileso1");
+	con.append("<input type='text' name='xxx' value='"+filename+"' class='tekito"+count+"' /><button class='dlg-btn"+count+"'style='width:32px;height:32px;'onclick='deleteSlot("+num+")'></button>");
 	$('.dlg-btn'+num).button({
 		icons: { primary: "ui-icon-closethick" },
 	});
@@ -547,29 +707,30 @@ function addfile2(num,name)
 {
 	var count = num;
 	var filename = name;
-	var con = $(fileso);
-	con.append("<input type='text' name='xxx' value='"+filename+"' class='tekito"+count+"' /><button class='dlg-btn"+count+"'style='width:32px;height:32px;'onclick='TEST("+num+")'></button>");
+	var con = $("#fileso2");
+	con.append("<input type='text' name='xxx"+num+"' value='"+filename+"' class='tekito"+count+"' /><button class='dlg-btn"+count+"'style='width:32px;height:32px;'onclick='deleteSlot("+num+")'></button>");
 	$('.dlg-btn'+num).button({
 		icons: { primary: "ui-icon-closethick" },
 	});
 }
+
 //-----------------------------------------------------------
 //アップロード(予定/後)画像 指定削除
 //
 //-----------------------------------------------------------
-function TEST(i)
+function deleteSlot(i)
 {
 	var ova = "";
 	// ajax通信 Actionへデータ(型:Integer) 送信と受信
 	var data = {"m_Num" : i,"param" : "asd"};
-	$.ajax({
+	/*$.ajax({
         type: "GET",
         url: 'uplo/GetImageFileNum',
         data:data,
         dataType: "json",
         async: false,
         success: function(json){
-        	alert(json);
+
 
 			}
     });
@@ -583,22 +744,253 @@ function TEST(i)
         	ova = data[0].m_filename;
         	alert(ova);
 			}
-    });
-	$(files).find('.dlg-btn'+i).remove();
-	$(files).find('.tekito'+i).remove();
+    });*/
+	$("#fileso1").find('.dlg-btn'+i).remove();
+	$("#fileso1").find('.tekito'+i).remove();
+	$("#fileso2").find('.dlg-btn'+i).remove();
+	$("#fileso2").find('.tekito'+i).remove();
+	OrgArraySelectAdd(i,-1);
 
 }
 //-----------------------------------------------------------
 // アップロード(予定/後)画像クリア
 //
 //-----------------------------------------------------------
-function UploadClear()
+function UploadClear1()
 {
-	document.getElementById("fileselect").value = "";
-	// 子ノード解析
-	var aNode = document.getElementById("fileso");
+	var aNode ="";
+	aNode = document.getElementById("fileso1");
 	for (var i =aNode.childNodes.length-1; i>0; i--) {
 		aNode.removeChild(aNode.childNodes[i]);
 	}
+	document.getElementById("fileselect1").files = "";
+	document.getElementById("fileselect1").value = "";
+	OrgArrayClear();
+	OrgDeleteFileArrayClear();
 
+}
+//-----------------------------------------------------------
+//アップロード(予定/後)画像クリア
+//
+//-----------------------------------------------------------
+function UploadClear2()
+{
+	var aNode ="";
+	var files= document.getElementsByName("fileOs")[1].files;
+	// 子ノード解析
+	aNode = document.getElementById("fileso2");
+	for (var i =aNode.childNodes.length-1; i>g_readFile*2; i--) {
+		aNode.removeChild(aNode.childNodes[i]);
+	}
+	document.getElementsByName("fileOs")[1].files = "";
+	document.getElementById("fileselect2").value = "";
+}
+//-----------------------------------------------------------
+//アップロード(予定/後)画像クリア
+//
+//-----------------------------------------------------------
+function UploadClear()
+{
+	var aNode ="";
+	aNode = document.getElementById("fileso2");
+	for (var i =aNode.childNodes.length-1; i>0; i--) {
+		aNode.removeChild(aNode.childNodes[i]);
+	}
+	document.getElementById("fileselect2").files = "";
+	document.getElementById("fileselect2").value = "";
+	OrgArrayClear();
+	OrgDeleteFileArrayClear();
+
+}
+//-----------------------------------------------------------
+// アップロード画像存在表示
+// 現在のあるすべての行に対して画像ある場合 色変え
+//-----------------------------------------------------------
+function dis(id)
+{
+	var Id = "#rbtn"+(id);
+	$(Id).css('background', '#f3f365');
+}
+function FileUpload1()
+{
+	var formData = new FormData();
+    files = $("#fileselect1").prop("files");
+    // 現在の最大のID番号取得
+    var arrrows = $("#list").getRowData();
+    var max = 0;
+    for (i = 0; i < arrrows.length; i++)
+    {
+        var cur = parseInt(arrrows[i].id);
+        if (max < cur)
+        {
+            max = cur;
+        }
+    }
+
+
+	for(var i=0, l=files.length; i<l; i+=1)
+	{
+		// 削除されていないファイルだけを送信するように整形
+		if(OrgArray[i] != -1)
+		{
+			formData.append("fileOs", files[i]);
+	}
+  }
+	formData.append("m_fileNum", max+1);
+	$.ajax({
+        type: "POST",
+        url: 'uplo/workTest',
+        data:formData,
+        dataType: "json",
+        async: false,
+        processData: false,
+        contentType: false,
+        success: function(){
+
+			}
+    });
+
+}
+function FileUpload2()
+{
+    // 現在の選択されている行を取得
+	var CurrentIdList = $("#list").getGridParam("selrow");
+    var listData = $('#list').jqGrid('getRowData', CurrentIdList);
+
+	var formData = new FormData();
+    files = $("#fileselect2").prop("files");
+    // 現在の最大のID番号取得
+    var arrrows = $("#list").getRowData();
+    var max = 0;
+    for (i = 0; i < arrrows.length; i++)
+    {
+        var cur = parseInt(arrrows[i].id);
+        if (max < cur)
+        {
+            max = cur;
+        }
+    }
+
+
+	for(var i=0, l=files.length; i<l; i+=1)
+	{
+		// 削除されていないファイルだけを送信するように整形
+		if(OrgArray[i+g_readFile] != -1)
+		{
+			formData.append("fileOs", files[i]);
+		}
+	}
+	formData.append("m_fileNum", listData.id);
+	$.ajax({
+        type: "POST",
+        url: 'uplo/workTest',
+        data:formData,
+        dataType: "json",
+        async: false,
+        processData: false,
+        contentType: false,
+        success: function(){
+
+			}
+    });
+
+	for(var i=0, l=OrgArray.length; i<l; i+=1)
+	{
+		// 削除するファイルだけを送信するように整形
+		if(OrgArray[i] == -1)
+		{
+			var data = {"m_Num" : listData.id,"param" : OrgDeleteFileArray[i]};
+			$.ajax({
+		        type: "POST",
+		        url: 'uplo/DeleteFile',
+		        data:data,
+		        dataType: "json",
+		        async: false,
+		        success: function(){
+					}
+		    });
+
+		}
+	}
+
+}
+//-----------------------------------------------------------
+// 配列要素追加
+//
+//-----------------------------------------------------------
+function OrgArrayAdd(value)
+{
+	// 要素 挿入
+	OrgArray.push(value);
+}
+//-----------------------------------------------------------
+// 配列要素指定追加
+//
+//-----------------------------------------------------------
+function OrgArraySelectAdd(i,value)
+{
+	// 要素 指定追加
+	OrgArray[i] = value;
+}
+//-----------------------------------------------------------
+// 配列要素全削除
+//
+//-----------------------------------------------------------
+function OrgArrayClear()
+{
+	// 配列要素全削除
+	OrgArray.length = 0;
+}
+function OrgDeleteFileArrayAdd(filename)
+{
+	OrgDeleteFileArray.push(filename);
+}
+function OrgDeleteFileArrayClear()
+{
+	// 配列要素全削除
+	OrgDeleteFileArray.length = 0;
+}
+//-----------------------------------------------------------
+// アップロード画像読み込み
+//
+//-----------------------------------------------------------
+function ReadUploadFile()
+{
+    // リスト化されている行から読み込み
+	// ID取得
+    var arrrows = $("#list").getRowData();
+    for (i = 0; i < arrrows.length; i++)
+    {
+        // IDをもとにImageフォルダにアクセス
+    	// ajax通信 Actionへデータ(型:Integer) 送信と受信
+    	var data = {"m_Num" : arrrows[i].id};
+    	var fileNum=0;
+    	$.ajax({
+            type: "GET",
+            url: 'uplo/GetImageFileNum',
+            data:data,
+            dataType: "json",
+            async: false,
+            success: function(json){
+            	fileNum = json;
+    			}
+        });
+
+        // 画像あったらアップロード画像存在表示
+    	if(fileNum > 0)
+    	{
+        	dis(arrrows[i].id);
+    	}
+
+
+    }
+}
+
+function close1()
+{
+	$( "#dialog" ).dialog( "close" );
+}
+function close2()
+{
+	$( "#dialogU" ).dialog( "close" );
 }

@@ -62,20 +62,21 @@
 	<input type='button' id='button0' onClick="deleteRow()" value='削除'>
 	</p>
 
+<!-- ダイアログ -->
 	<div id="dialog" title="新規追加">
-	登録日時：<input type="datetime-local" step=1 id="datetime">
+	登録日時：<input type="datetime-local" step=1 id="datetime1">
 	<br><br>
 	<b>ID: </b><b id ="addId"></b>
 	<p>ユーザ名:<input type="text" name="userid" id = "userId" /></p>
 	<p>パスワード:<input type="text" name="pass" id = "userPassword" /></p>
 	<p>表示名:<input type="text" name="display" id = "userName" /></p>
 	<s:form action="Upload" enctype="multipart/form-data">
-		<input id="fileselect" type="file" multiple="multiple"/>
+		<input id="fileselect1" name="fileOs" type="file" multiple="multiple"/>
 	</s:form>
-			<button class="dlg-btn" onClick="updataRow()" style="position: absolute; top: 10px; left:400px;">OK</button>
-			<button class="dlg-btn" style="position: absolute; top: 10px; left:500px;">Cancel</button>
-			<button class="dlg-btn" onClick="UploadClear()">Yahooo!</button>
-		<div id="fileso" style = "position: absolute;top: 50px; left:400px;">
+			<button class="dlg-btn" onClick="addRow()" style="position: absolute; top: 10px; left:400px;">OK</button>
+			<button class="dlg-btn" onClick="close1()"style="position: absolute; top: 10px; left:500px;">Cancel</button>
+			<button class="dlg-btn" onClick="FileUpload1()">Yahooo!</button>
+		<div id="fileso1" style = "position: absolute;top: 50px; left:400px;">
 		</div>
 	</div>
 	<script>
@@ -88,6 +89,7 @@
 
 	</div>
 
+<!-- ダイアログ -->
 	<div id="dialogU" title="更新">
 		<s:form action="Upload" enctype="multipart/form-data">
 		登録日時：<input type="datetime-local" step=1 id="datetime2">
@@ -100,12 +102,11 @@
 		<div id = "mass">
 		</div>
 		<button type="button" onclick="AddFile()"></button>
-		<input id="fileselect" type="file" multiple="multiple"/>
+		<input id="fileselect2" name="fileOs" type="file" multiple="multiple"/>
 		</s:form>
 			<button class="dlg-btn" onClick="updataRow()" style="position: absolute; top: 10px; left:400px;">OK</button>
-			<button class="dlg-btn" style="position: absolute; top: 10px; left:500px;">Cancel</button>
-		<div id="files" style = "position: absolute;top: 50px; left:400px;">
-		<!-- <div id="files" style="display:none;"> -->
+			<button class="dlg-btn" onClick="close2()"style="position: absolute; top: 10px; left:500px;">Cancel</button>
+		<div id="fileso2" style = "position: absolute;top: 50px; left:400px;">
 		</div>
 	</div>
 	<script>
@@ -119,7 +120,12 @@
 
 <br>
 <!-- テーブル -->
+<s:if test="state == 'in'">
 <table id="list"></table>
+</s:if>
+<s:else>
+<table id="list2"></table>
+</s:else>
 
 <div style="color:#a5a5ff; font-size:20pt; font-weight:bold;">ログイン</div>
 

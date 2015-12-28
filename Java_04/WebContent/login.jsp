@@ -100,7 +100,6 @@
 
 		<div id = "mass">
 		</div>
-		<button type="button" onclick="AddFile()"></button>
 		<input id="fileselect2" name="fileOs" type="file" multiple="multiple"/>
 		</s:form>
 			<button class="dlg-btn" onClick="updataRow()" style="position: absolute; top: 10px; left:400px;">OK</button>

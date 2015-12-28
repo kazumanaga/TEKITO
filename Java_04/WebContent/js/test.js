@@ -338,6 +338,14 @@ function addRow()
 				//最大行番号数選択
 				//DataBase更新
 				DataBaseUpdata();
+				var element0 = document.getElementById("userId");
+				var element1 = document.getElementById("userPassword");
+				var element2 = document.getElementById("userName");
+				 // 要素空
+				element0.value = '';
+				element1.value = '';
+				element2.value = '';
+
 
 					}
 		     });

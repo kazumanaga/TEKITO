@@ -4,40 +4,39 @@
 <script type="text/javascript" src="js/test.js"></script>
 
 <!-- カーソル -->
-<body onLoad="document.LoginCheck.userId.focus()">
+<body>
 <!-- ログイン -->
 <s:form action="LoginCheck">
-    <div>
-        <div>
-            ユーザー名:<s:textfield name="userId" />
-        </div>
-    </div>
-    <div>
-        <div>
-            パスワード:<s:textfield name="password" type="password" />
-        </div>
-    </div>
-            <s:if test="state == null">
+    <s:if test="state == null">
+	    <div>
+	        <div>
+	            ユーザー名:<s:textfield name="userId0" />
+	        </div>
+	    </div>
+	    <div>
+	        <div>
+	            パスワード:<s:textfield name="password" type="password" />
+	        </div>
+	    </div>
+	    <s:submit value="ログイン"/>
+	    <s:if test="pattern == 'err'">
+	       <font size="3" color="red"><s:property value="errmsg" /></font>
+		</s:if>
+		<s:if test="pattern == 'out'">
+	       <font size="3" color="black"><s:property value="errmsg" /></font>
+		</s:if>
 
-            <s:submit value="ログイン"/>
-            <s:if test="pattern == 'err'">
-            <font size="3" color="red"><s:property value="errmsg" /></font>
-			</s:if>
-		    <s:if test="pattern == 'out'">
+	</s:if>
+
+    <s:elseif test="state != in">
+    <s:submit value="値がおかしい"/>
+	     <s:if test="pattern == 'err'">
+	        <font size="3" color="red"><s:property value="errmsg" /></font>
+		 </s:if>
+		 <s:if test="pattern == 'out'">
             <font size="3" color="black"><s:property value="errmsg" /></font>
-			</s:if>
-
-			</s:if>
-
-            <s:elseif test="state != in">
-            <s:submit value="値がおかしい"/>
-            <s:if test="pattern == 'err'">
-            <font size="3" color="red"><s:property value="errmsg" /></font>
-			</s:if>
-		    <s:if test="pattern == 'out'">
-            <font size="3" color="black"><s:property value="errmsg" /></font>
-			</s:if>
-			</s:elseif>
+		 </s:if>
+	</s:elseif>
 
 </s:form>
 <!-- ユーザマスタ -->

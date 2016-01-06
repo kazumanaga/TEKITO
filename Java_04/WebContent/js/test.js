@@ -8,18 +8,23 @@ var g_UpdataCurrentNum = -1;
 var g_SelectAction = false;
 var g_tableNum = -1;
 var g_readFile = 0;
-var hiduke = new Date();
+var g_buttonNum = 0;
+
 
 // 配列
 var OrgArray = [];
 var OrgDeleteFileArray = [];
 
-
+window.onload = function(){
+	$('input[type!=datetime-local]').eq(0).focus();
+	}
 //-----------------------------------------------------------
 //	ロード実行
 //	--スクリプトが実行できる状態になったら--
 //-----------------------------------------------------------
 $(document).ready( function() {
+
+
 
 
 	//DataBase更新
@@ -48,6 +53,7 @@ $(document).ready( function() {
 			   SelectRow();
 			   SelectRowUpdata();
 			   ReadUploadFile();
+			   g_buttonNum = 0;
 		   }
 		});
 
@@ -71,9 +77,11 @@ $(document).ready( function() {
 		   scroll: true,
 		   viewrecords: true,
 		   caption: 'ログイン',
-
-		   gridComplete : function(){
+		   gridComplete : function()
+		   {
 			   SelectRow();
+			   g_buttonNum = 0;
+
 		   }
 		});
 
@@ -82,25 +90,19 @@ $(document).ready( function() {
 	{
 	    //input タグをリターンする
 	    var rbtn = '<input type="button" value="添付" name="rbtn" id="rbtn' + options['rowId'] + '" ' +
-	               'onclick="dialogOpenUpdate()"/>';
+	               'onclick="FileAddUpdate('+g_buttonNum+')"/>';
+	    g_buttonNum++;
 
 	    return rbtn;
 	}
 
-	$('#list').click(function(){
-
+	$('#list').click(function()
+	{
 		SelectRowUpdata();
-		});
+	});
 	$("#button3").click(function ()
 	{
-		var year = hiduke.getFullYear();
-		var month = hiduke.getMonth()+1;
-		var day = hiduke.getDate();
-		var hour = hiduke.getHours();
-		var minute = hiduke.getMinutes();
-		var second = hiduke.getSeconds();
-		var huzake = document.getElementById("datetime1");
-		huzake.value = year+"-"+month+"-"+day+"T"+hour+":"+minute+":"+second;
+
 	});
 	$( "#dialog" ).dialog({
 		autoOpen: false,
@@ -197,9 +199,9 @@ $(document).ready( function() {
 //	重複チェック
 //	--ユーザID パスワード--	return bool
 //-----------------------------------------------------------
-function OverlapCheck(chId1,chPass1,chId2,chPass2)
+function OverlapCheck(chId1,chId2)
 {
-	if(chId1 == chId2 && chPass1 == chPass2)
+	if(chId1 == chId2)
 	{
 		return true;
 	}
@@ -211,9 +213,9 @@ function OverlapCheck(chId1,chPass1,chId2,chPass2)
 //-----------------------------------------------------------
 function dialogOpenAdd()
 {
+
 	$( "#dialogU" ).dialog( "close" );
-	var element0 = $("#userName");
-	element0.focus();
+
 	var element4 = document.getElementById("addId");
     // 現在の最大のID番号取得
     var arrrows = $("#list").getRowData();
@@ -231,6 +233,20 @@ function dialogOpenAdd()
     element4.innerHTML = max+1;
 
 	$( "#dialog" ).dialog( "open" );
+
+	// ダイアログが開いていないと、ダイアログフィールドでの処理が実行できない
+	var hiduke = new Date();
+	var timezoneOffset = hiduke.getTimezoneOffset() * 60 * 1000;
+	var localDate = new Date(hiduke.getTime() - timezoneOffset);
+	// string.replace 文字置換
+	//var currentISODateString = localDate.toISOString().replace('Z', '');
+	// string.substr 文字列削除
+	var timeText = localDate.toISOString();
+	var currentISODateString = timeText.substr( 0 , (timeText.length-5) );
+	document.getElementById('datetime1').value = currentISODateString;
+
+	var element0 = document.getElementById("userId");
+	element0.focus();
 }
 //-----------------------------------------------------------
 //ダイアログボックスverUPDATE open
@@ -242,26 +258,18 @@ function dialogOpenUpdate()
     // 現在の選択されている行を取得
 	var CurrentIdList = $("#list").getGridParam("selrow");
 
-	// 登録日時はファイルを作り以降更新
-	var year = hiduke.getFullYear();
-	var month = hiduke.getMonth()+1;
-	var day = hiduke.getDate();
-	var hour = hiduke.getHours();
-	var minute = hiduke.getMinutes();
-	var second = hiduke.getSeconds();
-	var timer2 = document.getElementById('datetime2');
-	if(timer2)
-	{
-		timer2.value = year+"-"+month+"-"+day+"T"+hour+":"+minute+":"+second;
-	}
-	else
-	{
-		alert("エラー");
-	}
-
 	if(CurrentIdList)
 	{
+		// ダイアログが開いていないと、ダイアログフィールドでの処理が実行できない
 		$( "#dialogU" ).dialog( "open" );
+		var hiduke = new Date();
+		var timezoneOffset = hiduke.getTimezoneOffset() * 60 * 1000;
+		var localDate = new Date(hiduke.getTime() - timezoneOffset);
+		// string.substr 文字列削除 YYYY-MM-DDTHH:mm:ss.sssZ - .sssZ
+		var timeText = localDate.toISOString();
+		var currentISODateString = timeText.substr( 0 , (timeText.length-5) );
+		document.getElementById('datetime2').value = currentISODateString;
+
 	}
 	else
 	{
@@ -315,9 +323,9 @@ function addRow()
 		for(var i = 0;i<=arrrows.length;i++)
 		{
 			arrayData[i] = $('#list').jqGrid('getRowData', i+1);
-			if(OverlapCheck(arrayData[i].userId,arrayData[i].userPass,data.UserName,data.UserPass))
+			if(OverlapCheck(arrayData[i].userId,data.UserName))
 			{
-				alert("入力されたユーザー名とパスワードは\nすでに登録されているため\n追加登録できません");
+				alert("入力されたユーザー名は\nすでに登録されているため\n追加登録できません");
 				overFlag = true;
 				break;
 			}
@@ -349,6 +357,7 @@ function addRow()
 
 					}
 		     });
+				UploadClear1();
 			 $( "#dialog" ).dialog( "close" );
 		}
 
@@ -439,7 +448,6 @@ function deleteRow()
 
 	rowIdList = $("#list").jqGrid('getDataIDs');
 
-
     // 行選択(rowId指定)
 	//$("#list").setSelection(rowIdList[1],true);
 	// $("#list").setSelection(idyhoo[8],false); 反応なし
@@ -482,35 +490,60 @@ function updataRow()
 	var arrayData =[]; // 配列の初期化
 	var overFlag = false;
 
-	if(CurrentIdList)
-	{/*
-		for(var i = 0;i<=arrrows.length;i++)
-		{
-			arrayData[i] = $('#list').jqGrid('getRowData', i);
 
-			if(OverlapCheck(arrayData[i].userId,arrayData[i].userPass,data.UserName,data.UserPass))
-			{
-				alert("入力されたユーザー名とパスワードは\nすでに登録されているため\n更新できません");
-				overFlag = true;
-				break;
-			}
-		}*/
-		if(!overFlag)
+	if(CurrentIdList)
+	{
+		if(!str1=="" && !str2=="" && !str3=="")
 		{
-			FileUpload2();
-			$.ajax({
-	         type: "POST",
-	         url: 'DataBase/DataBaseEdit',
-	         data:data,
-	         dataType: "json",
-	         async: false,
-	         success: function(){
-			//DataBase更新
-			DataBaseUpdata();
-			g_UpdataCurrentNum = index;
-			$( "#dialogU" ).dialog( "close" );
+			for(var i = 0;i<=arrrows.length;i++)
+			{
+
+				arrayData[i] = $('#list').jqGrid('getRowData', i);
+
+				if(index != i&&OverlapCheck(arrayData[i].userId,data.UserName))
+				{
+					alert("入力されたユーザー名は\nすでに登録されているため\n更新できません");
+					overFlag = true;
+					break;
 				}
-	     });
+			}
+			if(!overFlag)
+			{
+				FileUpload2();
+				$.ajax({
+		         type: "POST",
+		         url: 'DataBase/DataBaseEdit',
+		         data:data,
+		         dataType: "json",
+		         async: false,
+		         success: function(){
+				//DataBase更新
+				DataBaseUpdata();
+				g_UpdataCurrentNum = index;
+				$( "#dialogU" ).dialog( "close" );
+					}
+		     });
+
+			}
+		}
+		else
+		{
+			alert("未記入項目があります");
+			if(str1=="")
+			{
+				element0.focus();
+				element0.setSelectionRange(0,0);
+			}
+			else if(str2=="")
+			{
+				element1.focus();
+				element1.setSelectionRange(0,0);
+			}
+			else if(str3=="")
+			{
+				element2.focus();
+				element2.setSelectionRange(0,0);
+			}
 
 		}
 
@@ -1012,3 +1045,15 @@ function close2()
 {
 	$( "#dialogU" ).dialog( "close" );
 }
+function FileAddUpdate(i)
+{
+	var rowIdList = $("#list").jqGrid('getDataIDs');
+	// 行選択
+	$("#list").setSelection(rowIdList[i],true);
+	// 更新ダイアログ 開く
+	dialogOpenUpdate();
+}
+function setFocus(){
+	$("#userId0").focus();
+	alert("AAAA");
+	}

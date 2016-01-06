@@ -17,7 +17,7 @@ public class LoginAction extends AbstractAction {
     public String state;
     public String errmsg;
     public String pattern;
-    public String userId;
+    public String userId0;
     public String password;
 
     private List<User> users = new ArrayList<User>();
@@ -28,9 +28,9 @@ public class LoginAction extends AbstractAction {
 
     public String execute() throws Exception {
     	//this.state = "out";
-        this.sessionMap.put("userId", null);
+        this.sessionMap.put("userId0", null);
         this.sessionMap.put("password", null);
-        this.userId = "";
+        this.userId0 = "";
         this.password = "";
 
         return "success";
@@ -99,7 +99,7 @@ public class LoginAction extends AbstractAction {
     	{
     		user = users.get(i);
 
-    		if(this.userId.equals(user.getUserId()) && this.password.equals(user.getUserPass()))
+    		if(this.userId0.equals(user.getUserId()) && this.password.equals(user.getUserPass()))
     		{
     			this.errmsg = "ログイン成功しました";
     			this.pattern = "ok";
